@@ -1,0 +1,17 @@
+{
+  "name": "XytechKiosk",
+  "private": true,
+  "directory": "/wwwroot/lib/",
+  "dependencies": {
+    "bootstrap": "v4.1.1",
+    "jquery": "3.3.1",
+    "angular": "1.7.0",
+    "angular-animate": "1.7.0",
+    "angular-messages": "1.7.0",
+    "angular-sanitize": "1.7.0",
+    "angular-ui-router": "1.0.17"
+  },
+  "resolutions": {
+    "bootstrap": "v4.1.1"
+  }
+}

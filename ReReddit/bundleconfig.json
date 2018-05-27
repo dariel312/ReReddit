@@ -1,0 +1,30 @@
+[
+  {
+    "outputFileName": "wwwroot/js/app.js",
+    "inputFiles": [
+      "wwwroot/app/api/*.js",
+      "wwwroot/app/footer/*.js",
+      "wwwroot/app/home/*.js",
+      "wwwroot/app/navbar/*.js",
+      "wwwroot/app/subreddit/*.js",
+      "wwwroot/app/app.module.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": false
+    }
+  },
+  {
+    "outputFileName": "wwwroot/js/angular-bundled.js",
+    "inputFiles": [
+      "bower_components/angular/angular.js",
+      "bower_components/angular-messages/angular-messages.js",
+      "bower_components/angular-sanitize/angular-sanitize.js",
+      "bower_components/angular-animate/angular-animate.js",
+      "bower_components/angular-ui-router/release/angular-ui-router.js"
+    ],
+    "minify": {
+      "enabled": false
+    }
+  }
+]
