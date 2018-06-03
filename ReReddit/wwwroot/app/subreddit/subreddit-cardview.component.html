@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col flex-grow">
-                <a ui-sref="subreddit.post({id:$ctrl.post.id})" class="card-post-title">{{$ctrl.post.title}}</a>
+                <a ui-sref="subreddit.post({id:$ctrl.post.id, post: $ctrl.post})" class="card-post-title">{{$ctrl.post.title}}</a>
                 <br />
                 <div class="text-muted card-misc-info">
                     <span>/u/{{$ctrl.post.author}}</span>

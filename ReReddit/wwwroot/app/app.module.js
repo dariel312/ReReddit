@@ -23,7 +23,10 @@
             })
             .state("subreddit.post", {
                 url: "/{id}",
-                component: "appSubredditPost"
+                component: "appSubredditPost",
+                params: {
+                    post: null
+                }
             })
             //.state("comments", {
             //    url: "/r/{name}/comments/{id}",
