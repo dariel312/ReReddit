@@ -15,6 +15,9 @@ const ApiService = function($http){
             // .catch(errorFunc);
     };
 
+    this.getPost = function (subreddit, id) {
+        return _get(host + "/r/" + subreddit + "/comments/" + id + ".json");
+    };
 
     this.getSubreddit = function(subreddit){
         return _get(host + "/r/" + subreddit + ".json");

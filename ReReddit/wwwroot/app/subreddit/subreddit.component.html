@@ -1,15 +1,8 @@
 ﻿<div class="container content-main">
     <div ng-repeat="p in $ctrl.posts" class="row">
-        <div class="col">
-            <div class="card form-group">
-                <div class="card-img-top" ng-if="p.data.preview.images.length > 0">
-                    <img ng-src="{{p.data.preview.images[0].source.url}}" class="card-img" />
-                </div>
-                <div class="card-body">
-                    <p>{{p.data.title}}</p>
-                    <a ng>Comments ()</a>
-                </div>
-            </div>
+        <div class="col col-sm-10 col-md-8 col-lg-6">
+            <app-subreddit-cardview post="p.data"></app-subreddit-cardview>
         </div>
     </div>
+    <ui-view></ui-view>
 </div>

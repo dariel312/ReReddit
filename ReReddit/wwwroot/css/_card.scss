@@ -1,5 +1,25 @@
 ﻿@import "_variables.scss";
 
+/*post card view*/
+.card-post-title {
+    font-size: 1.25rem;
+    color: black;
+}
+
+.card-actions {
+    a {
+        color: #585858;
+    }
+}
+
 .card-body{
     padding: 1rem 1.25rem;
+}
+
+.card-misc-info {
+    font-size: 0.85rem;
+
+    span:not(:last-child)::after {
+        content: ' \2022'
+    }
 }

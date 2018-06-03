@@ -1,0 +1,26 @@
+﻿const SubredditPostComponent = {
+    templateUrl: "/app/subreddit/subreddit-post.component.html",
+    controller: function ($stateParams, api) {
+        $ctrl = this;
+        $ctrl.name = $stateParams.name;
+        $ctrl.comments = [];
+        let html = angular.element('html');
+
+        this.$onInit = function () {
+            html.addClass('freeze-scroll');
+        };
+        this.$onDestroy = function () {
+            html.removeClass('freeze-scroll');
+        };
+
+        api.getPost($stateParams.name, $stateParams.id).then(function (result) {
+            $ctrl.post = result.data[0].data.children[0].data;
+            var cmts = [];
+
+            result.data.splice(0, 1);
+            angular.forEach(result.data, list => angular.forEach(list.data.children, comment => cmts.push(comment.data)));
+            $ctrl.comments = cmts;
+            console.log($ctrl.post);
+        });
+    }
+};
