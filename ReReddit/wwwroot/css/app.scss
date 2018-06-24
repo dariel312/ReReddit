@@ -1,7 +1,6 @@
 ﻿@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
 @import "_card.scss";
-@import "../app/navbar/navbar.component.scss";
 
 /*Scroll bar*/
 ::-webkit-scrollbar {
@@ -21,6 +20,12 @@
 }
 
 body {
+    font-size: 0.95rem;
+    font-family: $font-default;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
     font-family: $font-default;
 }
 
@@ -49,9 +54,28 @@ body {
 .freeze-scroll {
     overflow-y: hidden;
 }
+/*Navbar*/
+
+.navbar {
+    background-color: $color-nav-primary;
+    color: white;
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
 
 .font-small {
     font-size: 0.8rem;
+}
+
+.subreddit-cardview {
+    transition: 0.2s $bezier-deceleration;
+    transform: scale(1);
+    /*box-shadow: $shadow-d1;
+    border:none;*/
+    &:hover {
+        border: solid 2px #b1b1b1;
+        /*box-shadow: $shadow-d2;
+        transform: scale(1.01);*/
+    }
 }
 
 .subreddit-post {
@@ -94,6 +118,13 @@ body {
     .modal-title {
         font-weight: 300;
     }
+
+    .post-comment {
+        border-left: 2px solid;
+        border-color: #0089ff;
+        padding-left: 8px;
+        margin: 0 0 15px 15px;
+    }
 }
 
 ui-view {
@@ -113,3 +144,25 @@ ui-view {
         opacity: 1;
     }
 }
+
+/*html {
+    font-size: 1rem;
+}
+
+ @media screen and (min-width: $grid-sm) {
+    html {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width:$grid-md) {
+    html {
+        font-size: 1.4rem;
+    }
+}
+
+@media screen and (min-width:$grid-lg) {
+    html {
+        font-size: 1.6rem;
+    }
+}*/

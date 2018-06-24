@@ -12,15 +12,9 @@
   padding: 1rem 1.25rem; }
 
 .card-misc-info {
-  font-size: 0.85rem; }
+  font-size: 0.9rem; }
   .card-misc-info span:not(:last-child)::after {
     content: ' \2022'; }
-
-/*Navbar*/
-.navbar {
-  background-color: #084a7a;
-  color: white;
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3); }
 
 /*Scroll bar*/
 ::-webkit-scrollbar {
@@ -36,6 +30,11 @@
   background: #555; }
 
 body {
+  font-size: 0.95rem;
+  font-family: "Roboto"; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
   font-family: "Roboto"; }
 
 .content-main {
@@ -58,8 +57,24 @@ body {
 .freeze-scroll {
   overflow-y: hidden; }
 
+/*Navbar*/
+.navbar {
+  background-color: #084a7a;
+  color: white;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3); }
+
 .font-small {
   font-size: 0.8rem; }
+
+.subreddit-cardview {
+  transition: 0.2s cubic-bezier(0, 0, 0.2, 1);
+  transform: scale(1);
+  /*box-shadow: $shadow-d1;
+    border:none;*/ }
+  .subreddit-cardview:hover {
+    border: solid 2px #b1b1b1;
+    /*box-shadow: $shadow-d2;
+        transform: scale(1.01);*/ }
 
 .subreddit-post .modal-content {
   overflow-y: auto;
@@ -84,6 +99,12 @@ body {
 .subreddit-post .modal-title {
   font-weight: 300; }
 
+.subreddit-post .post-comment {
+  border-left: 2px solid;
+  border-color: #0089ff;
+  padding-left: 8px;
+  margin: 0 0 15px 15px; }
+
 ui-view {
   opacity: 1;
   display: block; }
@@ -94,3 +115,25 @@ ui-view {
     opacity: 0; }
   ui-view.ng-enter-active {
     opacity: 1; }
+
+/*html {
+    font-size: 1rem;
+}
+
+ @media screen and (min-width: $grid-sm) {
+    html {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width:$grid-md) {
+    html {
+        font-size: 1.4rem;
+    }
+}
+
+@media screen and (min-width:$grid-lg) {
+    html {
+        font-size: 1.6rem;
+    }
+}*/

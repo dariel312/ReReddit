@@ -3,31 +3,41 @@
     bindings: {
         post: '<'
     },
-    controller: function () {
-        $ctrl = this;
+    controller: function (api) {
+        var $ctrl = this;
 
-        this.$onInit = function () {
+        $ctrl.$onInit = function () {
             $ctrl.post.liked = 0;
         };
 
-        this.onLike = function (post) {
+        $ctrl.onLike = function (post, $event) {
+            $event.stopPropagation();
             if (post.liked === 0) {
                 post.ups++;
                 post.liked = 1;
+                api.vote(post.name, 1);
             } else if (post.liked === 1) {
                 post.ups--;
                 post.liked = 0;
             }
         }
-        this.onDisLike = function (post) {
+
+        $ctrl.onDisLike = function (post, $event) {
+            $event.stopPropagation();
+
             if (post.liked === 0) {
                 post.ups--;
                 post.liked = -1;
+                api.vote(post.name, -1);
             } else if (post.liked === -1) {
                 post.ups++;
                 post.liked = 0;
             }
           
         }
+
+        $ctrl.click = function (post) {
+            alert("clicked");
+        };
     }
 };

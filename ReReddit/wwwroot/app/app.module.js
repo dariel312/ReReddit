@@ -10,6 +10,8 @@
     app.component('appSubreddit', SubredditComponent);
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
+    app.component('appSubredditComment', SubredditCommentComponent);
+    app.component('appAuth', AuthComponent);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider) {
@@ -25,22 +27,23 @@
                 url: "/{id}",
                 component: "appSubredditPost",
                 params: {
-                    post: null
+                    post: null,
+                    id: null
                 }
             })
-            //.state("comments", {
-            //    url: "/r/{name}/comments/{id}",
-            //    component: "appSubreddit"
-            //})
             .state("home", {
                 url: "/",
-                component: 'appHome'
+                component: 'appSubreddit',
+                params: {
+                    name: null
+                }
             })
-            .state("about", {
-                url: "/about",
-                component: "appAbout"
+            .state("auth", {
+                url: "/auth",
+                component: 'appAuth'
             })
 
+        $urlRouterProvider.otherwise("/");
     });
 
 })();

@@ -1,9 +1,9 @@
 ﻿const SubredditComponent = {
     templateUrl: "/app/subreddit/subreddit.component.html",
     controller: function ($stateParams, api) {
-        $ctrl = this;
+        var $ctrl = this;
         $ctrl.name = $stateParams.name;
-        $ctrl.listing = null;
+        $ctrl.listing = [];
         $ctrl.posts = [];
 
         api.getSubreddit($stateParams.name).then(function (result) {
