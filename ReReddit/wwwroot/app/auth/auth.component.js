@@ -18,8 +18,8 @@ const AuthComponent = {
 
             return hashParams;
         }
-        var c = getHashParams();
 
+        var c = getHashParams();
         if (c.access_token !== undefined)
             api.setAuth(c);
 

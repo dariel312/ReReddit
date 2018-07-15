@@ -53,7 +53,7 @@ const ApiService = function ($http, $window, $rootScope) {
     };
 
     this.vote = function (id, dir) {
-        return _post(host + "/api/vote.json", { id: id, dir: dir });
+        return _post("/api/vote.json", { id: id, dir: dir });
     };
 
 
@@ -75,8 +75,11 @@ const ApiService = function ($http, $window, $rootScope) {
             onAuthChanged();
         }
     };
-
-    this.isLoggedIn = function (response) {
+    
+    this.getAuthToken = function () {
+        return auth_info.access_token;
+    }
+    this.isLoggedIn = function () {
         if (auth_info == null) {
             return false;
         }
