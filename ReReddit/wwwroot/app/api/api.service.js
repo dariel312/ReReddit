@@ -1,7 +1,7 @@
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
     const self = this;
     const host = "https://www.reddit.com";
     const oAuth = "https://oauth.reddit.com";
@@ -31,7 +31,7 @@ const ApiService = function ($http, $window, $rootScope) {
 
         return $http.post(url, data, {
             headers: {
-                'Content-Type': undefined
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
     };
@@ -53,7 +53,7 @@ const ApiService = function ($http, $window, $rootScope) {
     };
 
     this.vote = function (id, dir) {
-        return _post(host + "/api/vote.json", { id: id, dir: dir });
+        return _post("/api/vote", $httpParamSerializer({ 'id': '"' + id + '"', 'dir': '"' + dir + '"' }));
     };
 
 
@@ -76,6 +76,12 @@ const ApiService = function ($http, $window, $rootScope) {
         }
     };
 
+    this.getAuthToken = function () {
+        if (auth_info == null)
+            return null;
+
+        return auth_info.access_token;
+    }
     this.isLoggedIn = function (response) {
         if (auth_info == null) {
             return false;

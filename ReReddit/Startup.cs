@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
+using ReReddit.Middleware;
 
 namespace ReReddit
 {
@@ -15,6 +16,8 @@ namespace ReReddit
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddTransient<Html5mode>();
+            services.AddTransient<RedditApi>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -24,20 +27,13 @@ namespace ReReddit
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.Use(async (context, next) => {
-                await next();
-                if (context.Response.StatusCode == 404 &&
-                   !Path.HasExtension(context.Request.Path.Value) &&
-                   !context.Request.Path.Value.StartsWith("/api/"))
-                {
-                    context.Request.Path = "/index.html";
-                    await next();
-                }
-            });
+
+            app.UseMiddleware<Html5mode>();
             app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseMvc();
+            app.UseMiddleware<RedditApi>();
         }
     }
 }

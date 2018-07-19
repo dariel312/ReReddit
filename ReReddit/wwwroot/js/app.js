@@ -1,7 +1,30 @@
+var ApiInterceptor = function ($q, $window, $injector) {
+    return {
+        /*Must use $injector otherwise you'll get cirucular dependency*/
+        'request': function (config) {
+            var api = $injector.get('api');
+            var url = config.url.split('/');
+
+            if (api.isLoggedIn() && (url[1] == 'api' || url[0] == 'api')) {
+                config.headers.Authorization = "Bearer " + api.getAuthToken();
+            }
+            return config;
+        },
+
+        //Returns to login if unathorized
+        'responseError': function (rejection) {
+            if (rejection.status === 401) {
+                var api = $injector.get('api');
+                api.logOff();
+            }
+            else return $q.reject(rejection);
+        }
+    };
+}
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
     const self = this;
     const host = "https://www.reddit.com";
     const oAuth = "https://oauth.reddit.com";
@@ -31,7 +54,7 @@ const ApiService = function ($http, $window, $rootScope) {
 
         return $http.post(url, data, {
             headers: {
-                'Content-Type': undefined
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
     };
@@ -53,7 +76,7 @@ const ApiService = function ($http, $window, $rootScope) {
     };
 
     this.vote = function (id, dir) {
-        return _post(host + "/api/vote.json", { id: id, dir: dir });
+        return _post("/api/vote", $httpParamSerializer({ 'id': '"' + id + '"', 'dir': '"' + dir + '"' }));
     };
 
 
@@ -76,6 +99,12 @@ const ApiService = function ($http, $window, $rootScope) {
         }
     };
 
+    this.getAuthToken = function () {
+        if (auth_info == null)
+            return null;
+
+        return auth_info.access_token;
+    }
     this.isLoggedIn = function (response) {
         if (auth_info == null) {
             return false;
@@ -265,8 +294,9 @@ const SubredditComponent = {
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appAuth', AuthComponent);
 
+
     //Configure angular here
-    app.config(function ($locationProvider, $urlRouterProvider, $stateProvider) {
+    app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise('/');
 
@@ -295,7 +325,9 @@ const SubredditComponent = {
                 component: 'appAuth'
             })
 
-        $urlRouterProvider.otherwise("/");
+
+        //For api auth
+        $httpProvider.interceptors.push(ApiInterceptor);
     });
 
 })();

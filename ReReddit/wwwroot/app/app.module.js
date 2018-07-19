@@ -13,8 +13,9 @@
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appAuth', AuthComponent);
 
+
     //Configure angular here
-    app.config(function ($locationProvider, $urlRouterProvider, $stateProvider) {
+    app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {
         $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise('/');
 
@@ -43,7 +44,9 @@
                 component: 'appAuth'
             })
 
-        $urlRouterProvider.otherwise("/");
+
+        //For api auth
+        $httpProvider.interceptors.push(ApiInterceptor);
     });
 
 })();
