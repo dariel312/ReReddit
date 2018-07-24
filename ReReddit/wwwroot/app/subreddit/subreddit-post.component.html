@@ -20,7 +20,7 @@
                                 </span>
                             </div>
                         </div>
-                        <button type="button" class="close" ui-sref="subreddit({name: $ctrl.name})">
+                        <button type="button" class="close" ui-sref="^">
                             <i class="material-icons">close</i>
                         </button>
                     </div>
@@ -61,8 +61,7 @@
                             </div>
                         </div>
                         <div class="row" ng-repeat="c in $ctrl.comments">
-                            <app-subreddit-comment comment="c"></app-subreddit-comment>
-
+                            <app-subreddit-comment comment="c" depth="0"></app-subreddit-comment>
                         </div>
                     </div>
                 </div>

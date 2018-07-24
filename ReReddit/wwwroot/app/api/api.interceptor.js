@@ -8,6 +8,7 @@ var ApiInterceptor = function ($q, $window, $injector) {
             if (api.isLoggedIn() && (url[1] == 'api' || url[0] == 'api')) {
                 config.headers.Authorization = "Bearer " + api.getAuthToken();
             }
+
             return config;
         },
 

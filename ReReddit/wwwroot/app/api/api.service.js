@@ -1,7 +1,7 @@
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
     const self = this;
     const host = "https://www.reddit.com";
     const oAuth = "https://oauth.reddit.com";
@@ -46,14 +46,23 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
     };
 
     this.getSubreddit = function (subreddit) {
-        if (subreddit == null)
-            return _get(host + "/.json");
-        else
-            return _get(host + "/r/" + subreddit + ".json");
+
+        if (this.isLoggedIn()) {
+            if (subreddit == null)
+                return _get("api/hot");
+            else
+                return _get("api/r/" + subreddit);
+        }
+        else {
+            if (subreddit == null)
+                return _get(host + "/.json");
+            else
+                return _get(host + "/r/" + subreddit + ".json");
+        }
     };
 
     this.vote = function (id, dir) {
-        return _post("/api/vote", $httpParamSerializer({ 'id': '"' + id + '"', 'dir': '"' + dir + '"' }));
+        return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
 
@@ -73,6 +82,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
         if (self.isLoggedIn) {
             $window.localStorage.removeItem(token_key);
             onAuthChanged();
+            $state.go("home");
         }
     };
 

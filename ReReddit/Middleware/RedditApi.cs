@@ -29,31 +29,33 @@ namespace ReReddit.Middleware
                 return;
             }
 
-
             var method = HttpMethod.Get;
 
             if (context.Request.Method == "POST")
                 method = HttpMethod.Post;
 
-            var request = new HttpRequestMessage(method, REDDIT_API + context.Request.Path);
+            //get path
+            var sourcePath = context.Request.Path.ToString();
+            var path = sourcePath.Remove(sourcePath.IndexOf("/api"), 4);
+            var request = new HttpRequestMessage(method, REDDIT_API + path);
 
+            //get auth token
             var auth = context.Request.Headers.FirstOrDefault(m => m.Key == "Authorization");
             if (auth.Key != null)
                 request.Headers.Add("Authorization", auth.Value[0]);
 
+            //set user agent
             var userAgent = context.Request.Headers.FirstOrDefault(m => m.Key == "User-Agent");
             request.Headers.Add("User-Agent", userAgent.Value[0]);
 
-
+            //set body data
             var reader = new StreamReader(context.Request.Body);
             var body = await reader.ReadToEndAsync();
             var formData = HttpUtility.ParseQueryString(body);
             var values = new Dictionary<string, string>();
 
             foreach (var v in formData.AllKeys)
-            {
                 values[v] = formData.Get(v);
-            }
 
             var r = new FormUrlEncodedContent(values);
             request.Content = r;

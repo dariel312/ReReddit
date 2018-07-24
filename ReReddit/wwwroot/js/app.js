@@ -8,6 +8,7 @@ var ApiInterceptor = function ($q, $window, $injector) {
             if (api.isLoggedIn() && (url[1] == 'api' || url[0] == 'api')) {
                 config.headers.Authorization = "Bearer " + api.getAuthToken();
             }
+
             return config;
         },
 
@@ -24,7 +25,7 @@ var ApiInterceptor = function ($q, $window, $injector) {
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
     const self = this;
     const host = "https://www.reddit.com";
     const oAuth = "https://oauth.reddit.com";
@@ -69,14 +70,23 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
     };
 
     this.getSubreddit = function (subreddit) {
-        if (subreddit == null)
-            return _get(host + "/.json");
-        else
-            return _get(host + "/r/" + subreddit + ".json");
+
+        if (this.isLoggedIn()) {
+            if (subreddit == null)
+                return _get("api/hot");
+            else
+                return _get("api/r/" + subreddit);
+        }
+        else {
+            if (subreddit == null)
+                return _get(host + "/.json");
+            else
+                return _get(host + "/r/" + subreddit + ".json");
+        }
     };
 
     this.vote = function (id, dir) {
-        return _post("/api/vote", $httpParamSerializer({ 'id': '"' + id + '"', 'dir': '"' + dir + '"' }));
+        return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
 
@@ -96,6 +106,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer) {
         if (self.isLoggedIn) {
             $window.localStorage.removeItem(token_key);
             onAuthChanged();
+            $state.go("home");
         }
     };
 
@@ -164,12 +175,14 @@ const NavbarComponent = {
         $ctrl.logged_in = api.isLoggedIn();
 
         $ctrl.onLogin = function () {
-            console.log("poop");
             api.redirectAuthUrl();
         };
-
+        $ctrl.onLogout = function () {
+            api.logOff();
+        };
         $rootScope.$on('auth-changed', function (event, args) {
-            alert("OMG AUTH CHANGED FROM NAVBAR");
+            $ctrl.logged_in = api.isLoggedIn();
+            alert.log("auth changed from nav");
         });
     }
 };
@@ -219,19 +232,18 @@ const SubredditCardviewComponent = {
 const SubredditCommentComponent = {
     templateUrl: "/app/subreddit/subreddit-comment.component.html",
     bindings: {
-        comment: '='
+        comment: '<',
+        depth: '<'
     },
     controller: function  (api) {
         var $ctrl = this;
-
-
     }
 };
 const SubredditPostComponent = {
     templateUrl: "/app/subreddit/subreddit-post.component.html",
-    controller: function ($stateParams, $state, $sce, api) {
+    controller: function ($stateParams, $state, api) {
         var $ctrl = this;
-        $ctrl.name = $stateParams.name;
+        $ctrl.name = $stateParams.subreddit;
         $ctrl.comments = [];
         $ctrl.post = $stateParams.post;
 
@@ -239,30 +251,38 @@ const SubredditPostComponent = {
 
         this.$onInit = function () {
             html.addClass('freeze-scroll');
+
+            if ($stateParams.subreddit == null)
+                $ctrl.name = $stateParams.name;
+
+            if ($ctrl.name == null)
+                $state.go('^');
+
+
+            api.getPost($ctrl.name, $stateParams.id).then(function (result) {
+
+                if ($ctrl.post == null)
+                    $ctrl.post = result.data[0].data.children[0].data;
+
+                var cmts = [];
+                result.data.splice(0, 1);
+
+                angular.forEach(result.data, list =>
+                    angular.forEach(list.data.children, comment =>
+                        cmts.push(comment.data)));
+
+                $ctrl.comments = cmts;
+            }, function (result) {
+                $state.go('^')
+                });
+
         };
         this.$onDestroy = function () {
             html.removeClass('freeze-scroll');
         };
 
-        if ($stateParams.name == null)
-            $state.go('^');
 
-        api.getPost($stateParams.name, $stateParams.id).then(function (result) {
 
-            if ($ctrl.post == null)
-                $ctrl.post = result.data[0].data.children[0].data;
-
-            var cmts = [];
-            result.data.splice(0, 1);
-
-            angular.forEach(result.data, list =>
-                angular.forEach(list.data.children, comment =>
-                    cmts.push(comment.data)));
-
-            $ctrl.comments = cmts;
-        }, function (result) {
-            $state.go('^')
-        });
     }
 };
 const SubredditComponent = {
@@ -303,14 +323,18 @@ const SubredditComponent = {
         $stateProvider
             .state("subreddit", {
                 url: "/r/{name}",
-                component: "appSubreddit"
+                component: "appSubreddit",
+                params: {
+                    name: null
+                }
             })
             .state("subreddit.post", {
                 url: "/{id}",
                 component: "appSubredditPost",
                 params: {
                     post: null,
-                    id: null
+                    id: null,
+                    subreddit: null
                 }
             })
             .state("home", {
@@ -318,6 +342,15 @@ const SubredditComponent = {
                 component: 'appSubreddit',
                 params: {
                     name: null
+                }
+            })
+            .state("home.post", {
+                url: "r/{subreddit}/{id}",
+                component: 'appSubredditPost',
+                params: {
+                    post: null,
+                    id: null,
+                    subreddit: null
                 }
             })
             .state("auth", {

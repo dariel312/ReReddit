@@ -4,7 +4,12 @@
         <br />
         <span ng-bind-html="$ctrl.comment.body"></span>
     </div>
-    <div ng-repeat="c in $ctrl.comment.replies.data.children">
-        <app-subreddit-comment comment="c.data"></app-subreddit-comment>
+    <div ng-repeat="c in $ctrl.comment.replies.data.children" ng-if="$ctrl.depth < 5">
+        <app-subreddit-comment comment="c.data" depth="$ctrl.depth + 1"></app-subreddit-comment>
+    </div>
+    <div class="col" ng-if="$ctrl.depth >= 5">
+        <div class="post-comment">
+            <a href="#">More Comments (12)</a>
+        </div>
     </div>
 </div>

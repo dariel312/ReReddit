@@ -5,12 +5,14 @@
         $ctrl.logged_in = api.isLoggedIn();
 
         $ctrl.onLogin = function () {
-            console.log("poop");
             api.redirectAuthUrl();
         };
-
+        $ctrl.onLogout = function () {
+            api.logOff();
+        };
         $rootScope.$on('auth-changed', function (event, args) {
-            alert("OMG AUTH CHANGED FROM NAVBAR");
+            $ctrl.logged_in = api.isLoggedIn();
+            alert.log("auth changed from nav");
         });
     }
 };
