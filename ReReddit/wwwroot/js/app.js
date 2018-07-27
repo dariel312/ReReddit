@@ -28,7 +28,6 @@ var ApiInterceptor = function ($q, $window, $injector) {
 const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
     const self = this;
     const host = "https://www.reddit.com";
-    const oAuth = "https://oauth.reddit.com";
     const client_id = "TDmT_7LQ_5LkmQ";
     const client_secret = "";
     const redirect_uri = "http://localhost:55840/auth";
@@ -89,7 +88,14 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
-
+    this.getSidebar = function (subreddit) {
+        if (this.isLoggedIn()) {
+            return _get("api/r/" + subreddit + "/about");
+        }
+        else {
+            return _get(host + "/r/" + subreddit + "/about.json");
+        }
+    }
 
     //Auth
     this.redirectAuthUrl = function () {
@@ -161,6 +167,25 @@ const FooterComponent = {
     controller: function () {
 
     }
+};
+const BigNumberFilter = function () {
+    return function (number) {
+
+        if (number != undefined)
+            console.log(number);
+
+        abs = Math.abs(number)
+
+        if (abs >= Math.pow(10, 12))// trillion
+            number = (number / Math.pow(10, 12)).toFixed(1) + "t";
+        else if (abs < Math.pow(10, 12) && abs >= Math.pow(10, 9)) // billion
+            number = (number / Math.pow(10, 9)).toFixed(1) + "b";
+        else if (abs < Math.pow(10, 9) && abs >= Math.pow(10, 6)) // million
+            number = (number / Math.pow(10, 6)).toFixed(1) + "m";
+        else if (abs < Math.pow(10, 6) && abs >= Math.pow(10, 3))// thousand
+            number = (number / Math.pow(10, 3)).toFixed(1) + "k";
+        return number;
+    };
 };
 const HomeComponent = {
     templateUrl: "/app/home/home.component.html",
@@ -285,6 +310,31 @@ const SubredditPostComponent = {
 
     }
 };
+const SubredditSidebarComponent = {
+    templateUrl: "/app/subreddit/subreddit-sidebar.component.html",
+    bindings: {
+        subreddit: '<'
+    },
+    controller: function ($state, api) {
+        var $ctrl = this;
+        $ctrl.s = null;
+
+        this.$onInit = function () {
+            api.getSidebar($ctrl.subreddit).then(function (response) {
+                $ctrl.s = response.data.data;
+
+                var decoded = angular.element('<textarea />').html($ctrl.s.description_html).text();
+                $ctrl.s.description_html = decoded;
+
+            });
+        };
+        this.$onDestroy = function () {
+
+        };
+
+
+    }
+};
 const SubredditComponent = {
     templateUrl: "/app/subreddit/subreddit.component.html",
     controller: function ($stateParams, api) {
@@ -312,8 +362,9 @@ const SubredditComponent = {
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
+    app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
-
+    app.filter('bignumber', BigNumberFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {

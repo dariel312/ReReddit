@@ -4,7 +4,6 @@
 const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
     const self = this;
     const host = "https://www.reddit.com";
-    const oAuth = "https://oauth.reddit.com";
     const client_id = "TDmT_7LQ_5LkmQ";
     const client_secret = "";
     const redirect_uri = "http://localhost:55840/auth";
@@ -65,7 +64,14 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
-
+    this.getSidebar = function (subreddit) {
+        if (this.isLoggedIn()) {
+            return _get("api/r/" + subreddit + "/about");
+        }
+        else {
+            return _get(host + "/r/" + subreddit + "/about.json");
+        }
+    }
 
     //Auth
     this.redirectAuthUrl = function () {

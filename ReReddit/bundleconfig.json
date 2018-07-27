@@ -5,6 +5,7 @@
       "wwwroot/app/api/*.js",
       "wwwroot/app/auth/*.js",
       "wwwroot/app/footer/*.js",
+      "wwwroot/app/common/*.js",
       "wwwroot/app/home/*.js",
       "wwwroot/app/navbar/*.js",
       "wwwroot/app/subreddit/*.js",

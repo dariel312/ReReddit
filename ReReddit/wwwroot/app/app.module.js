@@ -11,8 +11,9 @@
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
+    app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
-
+    app.filter('bignumber', BigNumberFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {

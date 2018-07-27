@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\app\common\" />
     <Folder Include="wwwroot\app\sidebar\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
