@@ -7,13 +7,12 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" ui-sref-active="active">
-                <a class="nav-link" ui-sref="home">Current Subreddit</a>
+                <a class="nav-link" ui-sref="home">Home</a>
             </li>
-
         </ul>
         <div class="form-inline my-2 my-lg-0">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" ng-click="$ctrl.onLogin()" ng-if="!$ctrl.logged_in">Login</button>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" ng-click="$ctrl.onLogin()" ng-if="$ctrl.logged_in">Log Out</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" ng-click="$ctrl.onLogout()" ng-if="$ctrl.logged_in">Logoff</button>
         </div>
     </div>
 </nav>

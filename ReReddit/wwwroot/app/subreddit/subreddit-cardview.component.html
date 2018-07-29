@@ -1,11 +1,11 @@
-﻿<div class="card subreddit-cardview form-group" ui-sref="subreddit.post({id:$ctrl.post.id, post: $ctrl.post})">
+﻿<div class="card subreddit-cardview form-group" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
     <div class="card-img-top" ng-if="$ctrl.post.preview.images.length > 0">
         <img ng-src="{{$ctrl.post.preview.images[0].source.url}}" class="card-img" />
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col flex-grow">
-                <a class="card-post-title">{{$ctrl.post.title}}</a>
+                <a class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked === true}">{{$ctrl.post.title}}</a>
                 <br />
                 <div class="text-muted card-misc-info">
                     <span>/u/{{$ctrl.post.author}}</span>
@@ -23,6 +23,5 @@
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onDisLike($ctrl.post, $event)"><i class="material-icons">keyboard_arrow_down</i></button>
             </div>
         </div>
-
     </div>
 </div>

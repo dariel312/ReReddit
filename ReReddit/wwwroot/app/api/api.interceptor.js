@@ -1,4 +1,4 @@
-﻿var ApiInterceptor = function ($q, $window, $injector) {
+var ApiInterceptor = function ($q, $window, $injector) {
     return {
         /*Must use $injector otherwise you'll get cirucular dependency*/
         'request': function (config) {
@@ -8,6 +8,7 @@
             if (api.isLoggedIn() && (url[1] == 'api' || url[0] == 'api')) {
                 config.headers.Authorization = "Bearer " + api.getAuthToken();
             }
+
             return config;
         },
 

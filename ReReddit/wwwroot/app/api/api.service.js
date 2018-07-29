@@ -1,10 +1,9 @@
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
     const self = this;
     const host = "https://www.reddit.com";
-    const oAuth = "https://oauth.reddit.com";
     const client_id = "TDmT_7LQ_5LkmQ";
     const client_secret = "";
     const redirect_uri = "http://localhost:55840/auth";
@@ -31,7 +30,7 @@ const ApiService = function ($http, $window, $rootScope) {
 
         return $http.post(url, data, {
             headers: {
-                'Content-Type': undefined
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
     };
@@ -46,17 +45,33 @@ const ApiService = function ($http, $window, $rootScope) {
     };
 
     this.getSubreddit = function (subreddit) {
-        if (subreddit == null)
-            return _get(host + "/.json");
-        else
-            return _get(host + "/r/" + subreddit + ".json");
+
+        if (this.isLoggedIn()) {
+            if (subreddit == null)
+                return _get("api/hot");
+            else
+                return _get("api/r/" + subreddit);
+        }
+        else {
+            if (subreddit == null)
+                return _get(host + "/.json");
+            else
+                return _get(host + "/r/" + subreddit + ".json");
+        }
     };
 
     this.vote = function (id, dir) {
-        return _post("/api/vote.json", { id: id, dir: dir });
+        return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
-
+    this.getSidebar = function (subreddit) {
+        if (this.isLoggedIn()) {
+            return _get("api/r/" + subreddit + "/about");
+        }
+        else {
+            return _get(host + "/r/" + subreddit + "/about.json");
+        }
+    }
 
     //Auth
     this.redirectAuthUrl = function () {
@@ -73,13 +88,17 @@ const ApiService = function ($http, $window, $rootScope) {
         if (self.isLoggedIn) {
             $window.localStorage.removeItem(token_key);
             onAuthChanged();
+            $state.go("home");
         }
     };
-    
+
     this.getAuthToken = function () {
+        if (auth_info == null)
+            return null;
+
         return auth_info.access_token;
     }
-    this.isLoggedIn = function () {
+    this.isLoggedIn = function (response) {
         if (auth_info == null) {
             return false;
         }

@@ -1,0 +1,41 @@
+﻿<div class="card">
+    <div class="card-body">
+        <!--Header-->
+        <div class="row mb-3">
+            <div class="col">
+                <h5>{{$ctrl.s.url}}</h5>
+            </div>
+        </div>
+
+        <!--Subcriber\Active-->
+        <div class="row mb-3">
+            <div class="col">
+                <span>{{$ctrl.s.active_user_count | bignumber }}</span>
+                <br />
+                <small>Online</small>
+            </div>
+            <div class="col">
+                <span>{{$ctrl.s.subscribers | bignumber }}</span>
+                <br />
+                <small>Subscribers</small>
+            </div>
+        </div>
+
+        <!--Description-->
+        <div class="row mb-3">
+            <div class="col">
+                <span>{{$ctrl.s.public_description}}</span>
+            </div>
+        </div>
+
+        <!--Subscribed-->
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-block btn-primary" ng-show="$ctrl.s.user_is_subscriber">Subcribed</button>
+                <button class="btn btn-block btn-primary btn-outline-primary" ng-hide="$ctrl.s.user_is_subscriber">Subscribe</button>
+            </div>
+        </div>
+
+        <!--<span ng-bind-html="$ctrl.s.description_html"></span>-->
+    </div>
+</div>

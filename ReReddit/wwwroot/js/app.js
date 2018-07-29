@@ -8,6 +8,7 @@ var ApiInterceptor = function ($q, $window, $injector) {
             if (api.isLoggedIn() && (url[1] == 'api' || url[0] == 'api')) {
                 config.headers.Authorization = "Bearer " + api.getAuthToken();
             }
+
             return config;
         },
 
@@ -21,14 +22,12 @@ var ApiInterceptor = function ($q, $window, $injector) {
         }
     };
 }
-
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
     const self = this;
     const host = "https://www.reddit.com";
-    const oAuth = "https://oauth.reddit.com";
     const client_id = "TDmT_7LQ_5LkmQ";
     const client_secret = "";
     const redirect_uri = "http://localhost:55840/auth";
@@ -55,7 +54,7 @@ const ApiService = function ($http, $window, $rootScope) {
 
         return $http.post(url, data, {
             headers: {
-                'Content-Type': undefined
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
     };
@@ -70,17 +69,33 @@ const ApiService = function ($http, $window, $rootScope) {
     };
 
     this.getSubreddit = function (subreddit) {
-        if (subreddit == null)
-            return _get(host + "/.json");
-        else
-            return _get(host + "/r/" + subreddit + ".json");
+
+        if (this.isLoggedIn()) {
+            if (subreddit == null)
+                return _get("api/hot");
+            else
+                return _get("api/r/" + subreddit);
+        }
+        else {
+            if (subreddit == null)
+                return _get(host + "/.json");
+            else
+                return _get(host + "/r/" + subreddit + ".json");
+        }
     };
 
     this.vote = function (id, dir) {
-        return _post("/api/vote.json", { id: id, dir: dir });
+        return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
-
+    this.getSidebar = function (subreddit) {
+        if (this.isLoggedIn()) {
+            return _get("api/r/" + subreddit + "/about");
+        }
+        else {
+            return _get(host + "/r/" + subreddit + "/about.json");
+        }
+    }
 
     //Auth
     this.redirectAuthUrl = function () {
@@ -97,13 +112,17 @@ const ApiService = function ($http, $window, $rootScope) {
         if (self.isLoggedIn) {
             $window.localStorage.removeItem(token_key);
             onAuthChanged();
+            $state.go("home");
         }
     };
-    
+
     this.getAuthToken = function () {
+        if (auth_info == null)
+            return null;
+
         return auth_info.access_token;
     }
-    this.isLoggedIn = function () {
+    this.isLoggedIn = function (response) {
         if (auth_info == null) {
             return false;
         }
@@ -135,8 +154,8 @@ const AuthComponent = {
 
             return hashParams;
         }
-
         var c = getHashParams();
+
         if (c.access_token !== undefined)
             api.setAuth(c);
 
@@ -148,6 +167,25 @@ const FooterComponent = {
     controller: function () {
 
     }
+};
+const BigNumberFilter = function () {
+    return function (number) {
+
+        if (number != undefined)
+            console.log(number);
+
+        abs = Math.abs(number)
+
+        if (abs >= Math.pow(10, 12))// trillion
+            number = (number / Math.pow(10, 12)).toFixed(1) + "t";
+        else if (abs < Math.pow(10, 12) && abs >= Math.pow(10, 9)) // billion
+            number = (number / Math.pow(10, 9)).toFixed(1) + "b";
+        else if (abs < Math.pow(10, 9) && abs >= Math.pow(10, 6)) // million
+            number = (number / Math.pow(10, 6)).toFixed(1) + "m";
+        else if (abs < Math.pow(10, 6) && abs >= Math.pow(10, 3))// thousand
+            number = (number / Math.pow(10, 3)).toFixed(1) + "k";
+        return number;
+    };
 };
 const HomeComponent = {
     templateUrl: "/app/home/home.component.html",
@@ -162,12 +200,14 @@ const NavbarComponent = {
         $ctrl.logged_in = api.isLoggedIn();
 
         $ctrl.onLogin = function () {
-            console.log("poop");
             api.redirectAuthUrl();
         };
-
+        $ctrl.onLogout = function () {
+            api.logOff();
+        };
         $rootScope.$on('auth-changed', function (event, args) {
-            alert("OMG AUTH CHANGED FROM NAVBAR");
+            $ctrl.logged_in = api.isLoggedIn();
+            alert.log("auth changed from nav");
         });
     }
 };
@@ -217,19 +257,18 @@ const SubredditCardviewComponent = {
 const SubredditCommentComponent = {
     templateUrl: "/app/subreddit/subreddit-comment.component.html",
     bindings: {
-        comment: '='
+        comment: '<',
+        depth: '<'
     },
     controller: function  (api) {
         var $ctrl = this;
-
-
     }
 };
 const SubredditPostComponent = {
     templateUrl: "/app/subreddit/subreddit-post.component.html",
-    controller: function ($stateParams, $state, $sce, api) {
+    controller: function ($stateParams, $state, api) {
         var $ctrl = this;
-        $ctrl.name = $stateParams.name;
+        $ctrl.name = $stateParams.subreddit;
         $ctrl.comments = [];
         $ctrl.post = $stateParams.post;
 
@@ -237,30 +276,63 @@ const SubredditPostComponent = {
 
         this.$onInit = function () {
             html.addClass('freeze-scroll');
+
+            if ($stateParams.subreddit == null)
+                $ctrl.name = $stateParams.name;
+
+            if ($ctrl.name == null)
+                $state.go('^');
+
+
+            api.getPost($ctrl.name, $stateParams.id).then(function (result) {
+
+                if ($ctrl.post == null)
+                    $ctrl.post = result.data[0].data.children[0].data;
+
+                var cmts = [];
+                result.data.splice(0, 1);
+
+                angular.forEach(result.data, list =>
+                    angular.forEach(list.data.children, comment =>
+                        cmts.push(comment.data)));
+
+                $ctrl.comments = cmts;
+            }, function (result) {
+                $state.go('^')
+                });
+
         };
         this.$onDestroy = function () {
             html.removeClass('freeze-scroll');
         };
 
-        if ($stateParams.name == null)
-            $state.go('^');
 
-        api.getPost($stateParams.name, $stateParams.id).then(function (result) {
 
-            if ($ctrl.post == null)
-                $ctrl.post = result.data[0].data.children[0].data;
+    }
+};
+const SubredditSidebarComponent = {
+    templateUrl: "/app/subreddit/subreddit-sidebar.component.html",
+    bindings: {
+        subreddit: '<'
+    },
+    controller: function ($state, api) {
+        var $ctrl = this;
+        $ctrl.s = null;
 
-            var cmts = [];
-            result.data.splice(0, 1);
+        this.$onInit = function () {
+            api.getSidebar($ctrl.subreddit).then(function (response) {
+                $ctrl.s = response.data.data;
 
-            angular.forEach(result.data, list =>
-                angular.forEach(list.data.children, comment =>
-                    cmts.push(comment.data)));
+                var decoded = angular.element('<textarea />').html($ctrl.s.description_html).text();
+                $ctrl.s.description_html = decoded;
 
-            $ctrl.comments = cmts;
-        }, function (result) {
-            $state.go('^')
-        });
+            });
+        };
+        this.$onDestroy = function () {
+
+        };
+
+
     }
 };
 const SubredditComponent = {
@@ -290,7 +362,9 @@ const SubredditComponent = {
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
+    app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
+    app.filter('bignumber', BigNumberFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {
@@ -300,14 +374,18 @@ const SubredditComponent = {
         $stateProvider
             .state("subreddit", {
                 url: "/r/{name}",
-                component: "appSubreddit"
+                component: "appSubreddit",
+                params: {
+                    name: null
+                }
             })
             .state("subreddit.post", {
                 url: "/{id}",
                 component: "appSubredditPost",
                 params: {
                     post: null,
-                    id: null
+                    id: null,
+                    subreddit: null
                 }
             })
             .state("home", {
@@ -317,10 +395,20 @@ const SubredditComponent = {
                     name: null
                 }
             })
+            .state("home.post", {
+                url: "r/{subreddit}/{id}",
+                component: 'appSubredditPost',
+                params: {
+                    post: null,
+                    id: null,
+                    subreddit: null
+                }
+            })
             .state("auth", {
                 url: "/auth",
                 component: 'appAuth'
             })
+
 
         //For api auth
         $httpProvider.interceptors.push(ApiInterceptor);

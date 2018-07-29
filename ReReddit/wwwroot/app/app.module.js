@@ -11,7 +11,9 @@
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
+    app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
+    app.filter('bignumber', BigNumberFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {
@@ -21,14 +23,18 @@
         $stateProvider
             .state("subreddit", {
                 url: "/r/{name}",
-                component: "appSubreddit"
+                component: "appSubreddit",
+                params: {
+                    name: null
+                }
             })
             .state("subreddit.post", {
                 url: "/{id}",
                 component: "appSubredditPost",
                 params: {
                     post: null,
-                    id: null
+                    id: null,
+                    subreddit: null
                 }
             })
             .state("home", {
@@ -38,10 +44,20 @@
                     name: null
                 }
             })
+            .state("home.post", {
+                url: "r/{subreddit}/{id}",
+                component: 'appSubredditPost',
+                params: {
+                    post: null,
+                    id: null,
+                    subreddit: null
+                }
+            })
             .state("auth", {
                 url: "/auth",
                 component: 'appAuth'
             })
+
 
         //For api auth
         $httpProvider.interceptors.push(ApiInterceptor);
