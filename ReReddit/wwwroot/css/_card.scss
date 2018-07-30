@@ -17,9 +17,11 @@
 }
 
 .card-misc-info {
-    font-size: 0.9rem;
+    /*font-size: 0.9rem;*/
 
-    span:not(:last-child)::after {
+    span:not(:last-child)::after,
+    a:not(:last-child)::after,
+    div:not(:last-child)::after {
         content: ' \2022'
     }
 }

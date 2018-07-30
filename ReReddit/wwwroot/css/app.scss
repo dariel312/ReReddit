@@ -70,12 +70,19 @@ h1, h2, h3, h4, h5, h6 {
 .subreddit-cardview {
     transition: 0.2s $bezier-deceleration;
     transform: scale(1);
+    cursor: pointer;
+
     /*box-shadow: $shadow-d1;
     border:none;*/
     &:hover {
         border: 1px solid rgba(0, 0, 0, 0.36);
         /*box-shadow: $shadow-d2;
         transform: scale(1.01);*/
+    }
+
+    .card-img-top {
+        max-height: 50vh;
+        overflow: hidden;
     }
 }
 

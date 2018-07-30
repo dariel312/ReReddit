@@ -154,8 +154,8 @@ const AuthComponent = {
 
             return hashParams;
         }
-        var c = getHashParams();
 
+        var c = getHashParams();
         if (c.access_token !== undefined)
             api.setAuth(c);
 
@@ -187,6 +187,63 @@ const BigNumberFilter = function () {
         return number;
     };
 };
+/*
+ * Small component that handles Upvotes\Downvotes on a thing
+ */
+const PostLikeComponent = {
+    template: `
+           <div class="d-flex flex-column justify-content-center">
+                <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(1, $event)"><i class="material-icons">keyboard_arrow_up</i></button>
+                <span class="text-center" ng-class="{'text-danger': $ctrl.liked === -1, 'text-primary': $ctrl.liked === 1}">{{$ctrl.ups | bignumber }}</span>
+                <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(-1, $event)"><i class="material-icons">keyboard_arrow_down</i></button>
+            </div>
+        `,
+    bindings: {
+        ups: '<',
+        name: '<'
+    },
+    controller: function (api) {
+        var $ctrl = this;
+        $ctrl.liked = 0;
+
+        $ctrl.onLike = function (dir, $event) {
+            $event.stopPropagation();
+
+            if (dir === 1) {
+                if ($ctrl.liked === 1) { //unlike
+                    dir = 0;
+                    $ctrl.ups--;
+                }
+                else if ($ctrl.liked === -1) { //dislike to like
+                    $ctrl.ups += 2;
+                } else { //neutral to like
+                    $ctrl.ups += 1;
+                }
+            }
+            else if (dir === -1) {
+                if ($ctrl.liked === -1) { //undislike
+                    dir = 0;
+                    $ctrl.ups++;
+                }
+                else if ($ctrl.liked === 1) { //like to dislike
+                    $ctrl.ups -= 2;
+                } else { //neutral to dislike
+                    $ctrl.ups -= 1;
+                }
+            }
+
+            $ctrl.liked = dir;
+            api.vote($ctrl.name, dir).then(
+                function (response) {
+
+                }, function (response) {
+                    alert("You're doing that too much.");
+                }
+            );
+        }
+
+    }
+}
 const HomeComponent = {
     templateUrl: "/app/home/home.component.html",
     controller: function () {
@@ -223,35 +280,43 @@ const SubredditCardviewComponent = {
             $ctrl.post.liked = 0;
         };
 
-        $ctrl.onLike = function (post, $event) {
+        $ctrl.onLike = function (dir, $event) {
             $event.stopPropagation();
-            if (post.liked === 0) {
-                post.ups++;
-                post.liked = 1;
-                api.vote(post.name, 1);
-            } else if (post.liked === 1) {
-                post.ups--;
-                post.liked = 0;
+            var post = $ctrl.post;
+
+            if (dir === 1) {
+                if (post.liked === 1) { //unlike
+                    dir = 0;
+                    post.ups--;
+                }
+                else if (post.liked === -1) { //dislike to like
+                    post.ups += 2;
+                } else { //neutral to like
+                    post.ups += 1;
+                }
             }
+            else if (dir === -1) {
+                if (post.liked === -1) { //undislike
+                    dir = 0;
+                    post.ups++;
+                }
+                else if (post.liked === 1) { //like to dislike
+                    post.ups -= 2;
+                } else { //neutral to dislike
+                    post.ups -= 1;
+                }
+            }
+
+            post.liked = dir;
+            api.vote(post.name, dir).then(
+                function (response) {
+
+                }, function (response) {
+                    alert("You're doing that too much.");
+                }
+            );
         }
 
-        $ctrl.onDisLike = function (post, $event) {
-            $event.stopPropagation();
-
-            if (post.liked === 0) {
-                post.ups--;
-                post.liked = -1;
-                api.vote(post.name, -1);
-            } else if (post.liked === -1) {
-                post.ups++;
-                post.liked = 0;
-            }
-          
-        }
-
-        $ctrl.click = function (post) {
-            alert("clicked");
-        };
     }
 };
 const SubredditCommentComponent = {
@@ -262,6 +327,13 @@ const SubredditCommentComponent = {
     },
     controller: function  (api) {
         var $ctrl = this;
+
+        $ctrl.$onInit = function () {
+        }
+        var decoded = angular.element('<textarea />').html($ctrl.comment).text();
+        $ctrl.comment = decoded;
+
+
     }
 };
 const SubredditPostComponent = {
@@ -364,6 +436,7 @@ const SubredditComponent = {
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
+    app.component('postLike', PostLikeComponent);
     app.filter('bignumber', BigNumberFilter);
 
     //Configure angular here

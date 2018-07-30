@@ -6,5 +6,12 @@
     },
     controller: function  (api) {
         var $ctrl = this;
+
+        $ctrl.$onInit = function () {
+        }
+        var decoded = angular.element('<textarea />').html($ctrl.comment).text();
+        $ctrl.comment = decoded;
+
+
     }
 };

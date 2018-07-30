@@ -1,8 +1,13 @@
 ﻿<div class="col">
-    <div class="post-comment">
-        <span class="text-muted">{{$ctrl.comment.author}}</span>
-        <br />
-        <span ng-bind-html="$ctrl.comment.body"></span>
+    <div class="post-comment d-flex">
+
+        <post-like ups="$ctrl.comment.ups" name="$ctrl.comment.name" />
+
+        <div class="flex-grow-1 col">
+            <span class="text-muted">{{$ctrl.comment.author}}</span>
+            <br />
+            <span ng-bind-html="$ctrl.comment.body"></span>
+        </div>
     </div>
     <div ng-repeat="c in $ctrl.comment.replies.data.children" ng-if="$ctrl.depth < 5">
         <app-subreddit-comment comment="c.data" depth="$ctrl.depth + 1"></app-subreddit-comment>

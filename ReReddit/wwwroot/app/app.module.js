@@ -13,6 +13,7 @@
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
+    app.component('postLike', PostLikeComponent);
     app.filter('bignumber', BigNumberFilter);
 
     //Configure angular here

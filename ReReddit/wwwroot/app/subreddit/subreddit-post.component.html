@@ -7,17 +7,23 @@
                 <div class="modal-content" ng-show="$ctrl.post != null">
                     <div class="modal-header">
                         <div class="d-flex align-items-start">
-                            <div class="d-flex flex-column justify-content-center">
-                                <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike($ctrl.post)"><i class="material-icons">keyboard_arrow_up</i></button>
-                                <span class="text-center ng-binding" ng-class="{'text-danger': $ctrl.post.liked === -1, 'text-primary': $ctrl.post.liked === 1}">3707</span>
-                                <button class="btn btn-icon btn-link" ng-click="$ctrl.onDisLike($ctrl.post)"><i class="material-icons">keyboard_arrow_down</i></button>
-                            </div>
+
+                            <post-like ups="$ctrl.post.ups" name="$ctrl.post.name"/>
+                            
                             <div class="flex-grow-1 col">
                                 <h4 class="modal-title">{{$ctrl.post.title}}</h4>
-                                <span class="text-muted">
+                                <div class="text-muted mb-2">
                                     Posted by <a ng-href="http://www.reddit.com/u/{{$ctrl.post.author}}">{{$ctrl.post.author}}</a>
                                     <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>
-                                </span>
+                                </div>
+                                <div class="text-muted card-misc-info mb-3 small">
+                                    <span>
+                                        <a ng-href="{{$ctrl.post.url}}" target="_blank" href="#">({{$ctrl.post.domain}})</a>
+                                    </span>
+                                    <span>
+                                        <a ui-sref="subreddit({name: $ctrl.post.subreddit})">/r/{{$ctrl.post.subreddit}}</a>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <button type="button" class="close" ui-sref="^">
@@ -27,13 +33,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col">
-                                <p class="text-muted">
-
-                                    <div class="text-muted card-misc-info">
-                                        <span>{{$ctrl.post.domain}}</span>
-                                        <span>/r/{{$ctrl.post.subreddit}}</span>
-                                    </div>
-                                </p>
+                                <small class="float-right">{{$ctrl.post.upvote_ratio * 100}}% Upvoted</small>
                             </div>
                         </div>
                         <div class="row">
