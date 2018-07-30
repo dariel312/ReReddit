@@ -4,14 +4,8 @@
         comment: '<',
         depth: '<'
     },
-    controller: function  (api) {
+    controller: function  () {
         var $ctrl = this;
-
-        $ctrl.$onInit = function () {
-        }
-        var decoded = angular.element('<textarea />').html($ctrl.comment).text();
-        $ctrl.comment = decoded;
-
 
     }
 };

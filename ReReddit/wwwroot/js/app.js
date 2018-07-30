@@ -88,7 +88,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
-    this.getSidebar = function (subreddit) {
+    this.getSubredditAbout = function (subreddit) {
         if (this.isLoggedIn()) {
             return _get("api/r/" + subreddit + "/about");
         }
@@ -171,8 +171,8 @@ const FooterComponent = {
 const BigNumberFilter = function () {
     return function (number) {
 
-        if (number != undefined)
-            console.log(number);
+        //if (number != undefined)
+        //    console.log(number);
 
         abs = Math.abs(number)
 
@@ -185,6 +185,14 @@ const BigNumberFilter = function () {
         else if (abs < Math.pow(10, 6) && abs >= Math.pow(10, 3))// thousand
             number = (number / Math.pow(10, 3)).toFixed(1) + "k";
         return number;
+    };
+};
+const HtmlDecodeFilter = function () {
+    return function (html) {
+
+        var decoded = angular.element('<textarea />').html(html).text();
+
+        return decoded;
     };
 };
 /*
@@ -325,14 +333,8 @@ const SubredditCommentComponent = {
         comment: '<',
         depth: '<'
     },
-    controller: function  (api) {
+    controller: function  () {
         var $ctrl = this;
-
-        $ctrl.$onInit = function () {
-        }
-        var decoded = angular.element('<textarea />').html($ctrl.comment).text();
-        $ctrl.comment = decoded;
-
 
     }
 };
@@ -385,26 +387,11 @@ const SubredditPostComponent = {
 const SubredditSidebarComponent = {
     templateUrl: "/app/subreddit/subreddit-sidebar.component.html",
     bindings: {
-        subreddit: '<'
+        about: '<'
     },
-    controller: function ($state, api) {
+    controller: function () {
         var $ctrl = this;
-        $ctrl.s = null;
-
-        this.$onInit = function () {
-            api.getSidebar($ctrl.subreddit).then(function (response) {
-                $ctrl.s = response.data.data;
-
-                var decoded = angular.element('<textarea />').html($ctrl.s.description_html).text();
-                $ctrl.s.description_html = decoded;
-
-            });
-        };
-        this.$onDestroy = function () {
-
-        };
-
-
+         
     }
 };
 const SubredditComponent = {
@@ -414,11 +401,21 @@ const SubredditComponent = {
         $ctrl.name = $stateParams.name;
         $ctrl.listing = [];
         $ctrl.posts = [];
+        $ctrl.about = null;
 
-        api.getSubreddit($stateParams.name).then(function (result) {
-            $ctrl.listing = result.data.data;
-            $ctrl.posts = result.data.data.children;
-        });
+        $ctrl.$onInit = function () {
+
+            api.getSubreddit($stateParams.name).then(function (result) {
+                $ctrl.listing = result.data.data;
+                $ctrl.posts = result.data.data.children;
+            });
+
+            api.getSubredditAbout($stateParams.name).then(function (result) {
+                $ctrl.about = result.data.data;
+            });
+
+
+        };
     }
 };
 (function () {
@@ -438,6 +435,7 @@ const SubredditComponent = {
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.filter('bignumber', BigNumberFilter);
+    app.filter('htmldecode', HtmlDecodeFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {

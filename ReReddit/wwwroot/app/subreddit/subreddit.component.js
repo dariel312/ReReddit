@@ -5,10 +5,20 @@
         $ctrl.name = $stateParams.name;
         $ctrl.listing = [];
         $ctrl.posts = [];
+        $ctrl.about = null;
 
-        api.getSubreddit($stateParams.name).then(function (result) {
-            $ctrl.listing = result.data.data;
-            $ctrl.posts = result.data.data.children;
-        });
+        $ctrl.$onInit = function () {
+
+            api.getSubreddit($stateParams.name).then(function (result) {
+                $ctrl.listing = result.data.data;
+                $ctrl.posts = result.data.data.children;
+            });
+
+            api.getSubredditAbout($stateParams.name).then(function (result) {
+                $ctrl.about = result.data.data;
+            });
+
+
+        };
     }
 };

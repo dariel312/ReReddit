@@ -3,19 +3,22 @@
         <!--Header-->
         <div class="row mb-3">
             <div class="col">
-                <h5>{{$ctrl.s.url}}</h5>
+                <div class="row">
+                    <img style="border-radius: 50%; width:32px; height:32px; margin: 0 0.5rem" ng-src="{{$ctrl.about.icon_img}}" />
+                    <h5>{{$ctrl.about.url}}</h5>
+                </div>
             </div>
         </div>
 
         <!--Subcriber\Active-->
         <div class="row mb-3">
             <div class="col">
-                <span>{{$ctrl.s.active_user_count | bignumber }}</span>
+                <span>{{$ctrl.about.active_user_count | bignumber }}</span>
                 <br />
                 <small>Online</small>
             </div>
             <div class="col">
-                <span>{{$ctrl.s.subscribers | bignumber }}</span>
+                <span>{{$ctrl.about.subscribers | bignumber }}</span>
                 <br />
                 <small>Subscribers</small>
             </div>
@@ -24,18 +27,18 @@
         <!--Description-->
         <div class="row mb-3">
             <div class="col">
-                <span>{{$ctrl.s.public_description}}</span>
+                <span>{{$ctrl.about.public_description}}</span>
             </div>
         </div>
 
         <!--Subscribed-->
         <div class="row">
             <div class="col">
-                <button class="btn btn-block btn-primary" ng-show="$ctrl.s.user_is_subscriber">Subcribed</button>
-                <button class="btn btn-block btn-primary btn-outline-primary" ng-hide="$ctrl.s.user_is_subscriber">Subscribe</button>
+                <button class="btn btn-block btn-primary" ng-show="$ctrl.about.user_is_subscriber">Subcribed</button>
+                <button class="btn btn-block btn-primary btn-outline-primary" ng-hide="$ctrl.about.user_is_subscriber">Subscribe</button>
             </div>
         </div>
 
-        <!--<span ng-bind-html="$ctrl.s.description_html"></span>-->
+        <!--<span ng-bind-html="$ctrl.about.description_html"></span>-->
     </div>
 </div>

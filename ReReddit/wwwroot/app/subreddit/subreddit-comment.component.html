@@ -6,7 +6,7 @@
         <div class="flex-grow-1 col">
             <span class="text-muted">{{$ctrl.comment.author}}</span>
             <br />
-            <span ng-bind-html="$ctrl.comment.body"></span>
+            <span ng-bind-html="$ctrl.comment.body | htmldecode"></span>
         </div>
     </div>
     <div ng-repeat="c in $ctrl.comment.replies.data.children" ng-if="$ctrl.depth < 5">

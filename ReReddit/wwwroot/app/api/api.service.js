@@ -64,7 +64,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _post("/api/api/vote", $httpParamSerializer({ 'id': id, 'dir': dir }));
     };
 
-    this.getSidebar = function (subreddit) {
+    this.getSubredditAbout = function (subreddit) {
         if (this.isLoggedIn()) {
             return _get("api/r/" + subreddit + "/about");
         }

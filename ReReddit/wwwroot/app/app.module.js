@@ -15,6 +15,7 @@
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.filter('bignumber', BigNumberFilter);
+    app.filter('htmldecode', HtmlDecodeFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {

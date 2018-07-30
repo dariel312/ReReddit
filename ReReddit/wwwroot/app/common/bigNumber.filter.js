@@ -1,8 +1,8 @@
 ﻿const BigNumberFilter = function () {
     return function (number) {
 
-        if (number != undefined)
-            console.log(number);
+        //if (number != undefined)
+        //    console.log(number);
 
         abs = Math.abs(number)
 

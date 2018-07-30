@@ -1,4 +1,9 @@
 ﻿<div class="container-fluid content-main">
+    <div class="row">
+        <div class="col mb-3">
+            <img class="mx-auto d-block" ng-src="{{$ctrl.about.header_img}}"/>
+        </div>
+    </div>
     <div class="col">
         <div class="row">
             <div class="col-md-3 col-lg-3">
@@ -9,8 +14,8 @@
                     <app-subreddit-cardview post="p.data"></app-subreddit-cardview>
                 </div>
             </div>
-            <div class="col-sm-4 col-md-3">
-                <app-subreddit-sidebar subreddit="$ctrl.name" />
+            <div class="" style="width:19rem;">
+                <app-subreddit-sidebar about="$ctrl.about" />
             </div>
         </div>
     </div>
