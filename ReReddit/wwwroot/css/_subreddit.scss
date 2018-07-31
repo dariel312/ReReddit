@@ -1,0 +1,83 @@
+﻿@import "_variables.scss";
+
+.subreddit-header {
+}
+
+.subreddit-sidebar {
+    width: 19rem;
+
+    .subreddit-icon {
+        width: 32px;
+        height: 32px;
+        margin: 0 0.5rem;
+    }
+}
+
+.subreddit-post {
+
+    .modal-content {
+        overflow-y: auto;
+        max-height: 100vh;
+        display: block;
+        box-shadow: $shadow-d3;
+        opacity: 1;
+        transition: 0.10s $bezier-aceleration;
+        transform: translateY(0);
+        border-radius: 0;
+
+        &.ng-hide {
+            opacity: 0;
+            transform: translateY(-50%);
+        }
+
+        &.ng-hide-add {
+        }
+
+        &.ng-hide-add-active {
+        }
+
+        &.ng-hide-remove {
+        }
+
+        &.ng-hide-remove-active {
+            opacity: 0;
+        }
+    }
+
+    .modal-header {
+        padding-bottom: 0;
+    }
+
+    .modal-body {
+        padding-top: 0;
+    }
+
+    .modal-title {
+        font-weight: 300;
+    }
+
+    .post-comment {
+        border-left: 2px solid;
+        border-color: #0089ff;
+        padding-left: 8px;
+        margin: 0 0 15px 15px;
+    }
+}
+
+.subreddit-cardview {
+    transition: 0.2s $bezier-deceleration;
+    transform: scale(1);
+    cursor: pointer;
+    /*box-shadow: $shadow-d1;
+    border:none;*/
+    &:hover {
+        border: 1px solid rgba(0, 0, 0, 0.36);
+        /*box-shadow: $shadow-d2;
+        transform: scale(1.01);*/
+    }
+
+    .card-img-top {
+        max-height: 50vh;
+        overflow: hidden;
+    }
+}

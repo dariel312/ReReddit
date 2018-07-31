@@ -5,7 +5,6 @@
     //Declare all angular components/services/factories/filters here
     app.service('api', ApiService);
     app.component('appNavbar', NavbarComponent);
-    app.component('appFooter', FooterComponent);
     app.component('appHome', HomeComponent);
     app.component('appSubreddit', SubredditComponent);
     app.component('appSubredditPost', SubredditPostComponent);
@@ -14,6 +13,7 @@
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
+    app.component('defaultIcon', DefaultIconComponent);
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
 

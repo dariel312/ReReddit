@@ -6,6 +6,7 @@
         $ctrl.listing = [];
         $ctrl.posts = [];
         $ctrl.about = null;
+        $ctrl.rules = null;
 
         $ctrl.$onInit = function () {
 
@@ -18,6 +19,9 @@
                 $ctrl.about = result.data.data;
             });
 
+            api.getSubredditRules($stateParams.name).then(function (result) {
+                $ctrl.rules = result.data.rules;
+            });
 
         };
     }

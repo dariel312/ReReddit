@@ -73,6 +73,15 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         }
     }
 
+    this.getSubredditRules = function (subreddit) {
+        if (this.isLoggedIn()) {
+            return _get("api/r/" + subreddit + "/about/rules");
+        }
+        else {
+            return _get(host + "/r/" + subreddit + "/about/rules.json");
+        }
+    }
+
     //Auth
     this.redirectAuthUrl = function () {
         $window.location.href = 'https://www.reddit.com/api/v1/authorize?client_id=' + client_id + '&response_type=token&state=12345&redirect_uri=' + redirect_uri + '&scope=' + api_scope;

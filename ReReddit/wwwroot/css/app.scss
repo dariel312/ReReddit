@@ -1,10 +1,11 @@
 ﻿@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
 @import "_card.scss";
+@import "_subreddit.scss";
 
 /*Scroll bar*/
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -33,6 +34,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 80px;
 }
 
+.col-padded {
+    padding: 0 15px;
+}
+
 .btn-icon {
     font-size: 0;
     padding: 0px;
@@ -42,7 +47,9 @@ h1, h2, h3, h4, h5, h6 {
     border: none;
     border-radius: 2px;
 }
-
+.img-circle {
+    border-radius:50%;
+}
 .modal-header {
     border: none;
 }
@@ -67,75 +74,11 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.8rem;
 }
 
-.subreddit-cardview {
-    transition: 0.2s $bezier-deceleration;
-    transform: scale(1);
-    cursor: pointer;
 
-    /*box-shadow: $shadow-d1;
-    border:none;*/
-    &:hover {
-        border: 1px solid rgba(0, 0, 0, 0.36);
-        /*box-shadow: $shadow-d2;
-        transform: scale(1.01);*/
-    }
-
-    .card-img-top {
-        max-height: 50vh;
-        overflow: hidden;
-    }
-}
-
-.subreddit-header{
-
-}
-
-.subreddit-post {
-    .modal-content {
-        overflow-y: auto;
-        max-height: 100vh;
-        display: block;
-        box-shadow: $shadow-d3;
-        opacity: 1;
-        transition: 0.10s $bezier-aceleration;
-        transform: translateY(0);
-
-        &.ng-hide {
-            opacity: 0;
-            transform: translateY(-50%);
-        }
-
-        &.ng-hide-add {
-        }
-
-        &.ng-hide-add-active {
-        }
-
-        &.ng-hide-remove {
-        }
-
-        &.ng-hide-remove-active {
-            opacity: 0;
-        }
-    }
-
-    .modal-header {
-        padding-bottom: 0;
-    }
-
-    .modal-body {
-        padding-top: 0;
-    }
-
-    .modal-title {
-        font-weight: 300;
-    }
-
-    .post-comment {
-        border-left: 2px solid;
-        border-color: #0089ff;
-        padding-left: 8px;
-        margin: 0 0 15px 15px;
+@media (min-width: 1200px) {
+    /*To override container fluid on large screen*/
+    .container-lg {
+        max-width: 1140px;
     }
 }
 

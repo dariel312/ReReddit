@@ -20,6 +20,12 @@ const PostLikeComponent = {
         $ctrl.onLike = function (dir, $event) {
             $event.stopPropagation();
 
+            //must be logged in
+            if (!api.isLoggedIn()) {
+                alert("Must be logged in to do that.");
+                return;
+            }
+
             if (dir === 1) {
                 if ($ctrl.liked === 1) { //unlike
                     dir = 0;

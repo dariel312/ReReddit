@@ -1,10 +1,11 @@
-﻿<div class="card">
+﻿<div class="card mb-3">
     <div class="card-body">
         <!--Header-->
         <div class="row mb-3">
             <div class="col">
                 <div class="row">
-                    <img style="border-radius: 50%; width:32px; height:32px; margin: 0 0.5rem" ng-src="{{$ctrl.about.icon_img}}" />
+                    <img class="img-circle subreddit-icon" ng-src="{{$ctrl.about.icon_img}}" ng-if="$ctrl.about.icon_img != ''"/>
+                    <default-icon color="$ctrl.about.primary_color" ng-if="$ctrl.about.icon_img == ''"/>
                     <h5>{{$ctrl.about.url}}</h5>
                 </div>
             </div>
@@ -22,7 +23,7 @@
                 <br />
                 <small>Subscribers</small>
             </div>
-        </div>
+        </div>  
 
         <!--Description-->
         <div class="row mb-3">
@@ -34,11 +35,24 @@
         <!--Subscribed-->
         <div class="row">
             <div class="col">
-                <button class="btn btn-block btn-primary" ng-show="$ctrl.about.user_is_subscriber">Subcribed</button>
-                <button class="btn btn-block btn-primary btn-outline-primary" ng-hide="$ctrl.about.user_is_subscriber">Subscribe</button>
+                <button class="btn btn-block btn-primary" ng-class="{'btn-outline-primary': !$ctrl.about.user_is_subscriber}">
+                    {{$ctrl.about.user_is_subscriber? 'Subscribed' : 'Subscribe'}}
+                </button>
             </div>
         </div>
 
         <!--<span ng-bind-html="$ctrl.about.description_html"></span>-->
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header" ng-style="{'background-color': $ctrl.about.primary_color}" ng-class="{'text-white': $ctrl.about.primary_color != ''}">
+        Rules
+    </div>
+    <div class="card-body">
+        <div ng-repeat="n in $ctrl.rules">
+            {{n.priority + 1}}. {{n.short_name}}
+        </div>
     </div>
 </div>

@@ -4,7 +4,10 @@
         <post-like ups="$ctrl.comment.ups" name="$ctrl.comment.name" />
 
         <div class="flex-grow-1 col">
-            <span class="text-muted">{{$ctrl.comment.author}}</span>
+            <span class="text-muted">
+                {{$ctrl.comment.author}}<i ng-if="$ctrl.comment.is_submitter" class="material-icons align-middle">keyboard_voice</i>
+                <span am-time-ago="$ctrl.comment.created_utc | amFromUnix"></span>
+            </span>
             <br />
             <span ng-bind-html="$ctrl.comment.body | htmldecode"></span>
         </div>

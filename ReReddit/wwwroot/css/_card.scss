@@ -2,7 +2,7 @@
 
 /*post card view*/
 .card-post-title {
-    font-size: 1.25rem;
+    font-size: 1.20rem;
     color: black;
 }
 
@@ -24,4 +24,9 @@
     div:not(:last-child)::after {
         content: ' \2022'
     }
+}
+
+.card-header{
+    margin: -1px; /*Fix for that ugly line border thing*/
+    border:none;
 }
