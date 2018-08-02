@@ -1,11 +1,15 @@
 ﻿const HtmlDecodeFilter = function () {
-    return function (html) {
+    return function (html, isRaw) {
+        if (html == undefined)
+            return "";
 
-        //var decoded = angular.element('<textarea />').html(html).text();
-
-        var decoded = SnuOwnd.getParser().render(html);
-
-
-        return decoded;
+        if (isRaw == false) {
+            var decoded = SnuOwnd.getParser().render(html);
+            return decoded;
+        }
+        else {
+            var decoded = angular.element('<textarea />').html(html).text();
+            return decoded;
+        }
     };
 };

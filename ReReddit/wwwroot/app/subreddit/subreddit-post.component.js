@@ -7,9 +7,16 @@
         $ctrl.post = $stateParams.post;
 
         let html = angular.element('html');
+        let onEscHandler = function (e) {
+            if (e.keyCode == 27) {
+                $state.go('^')
+            }
+        };
 
         this.$onInit = function () {
             html.addClass('freeze-scroll');
+            angular.element(document).keyup(onEscHandler);
+
 
             if ($stateParams.subreddit == null)
                 $ctrl.name = $stateParams.name;
@@ -33,11 +40,13 @@
                 $ctrl.comments = cmts;
             }, function (result) {
                 $state.go('^')
-                });
+            });
 
         };
+
         this.$onDestroy = function () {
             html.removeClass('freeze-scroll');
+            angular.element(document).unbind('keyup', onEscHandler);
         };
 
 

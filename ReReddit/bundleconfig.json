@@ -32,5 +32,14 @@
     "minify": {
       "enabled": false
     }
+  },
+  {
+    "outputFileName": "wwwroot/js/angular-bundled.min.js",
+    "inputFiles": [
+      "wwwroot/js/angular-bundled.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
   }
 ]

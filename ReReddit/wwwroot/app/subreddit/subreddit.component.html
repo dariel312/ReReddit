@@ -4,19 +4,17 @@
             <img class="mx-auto d-block" ng-src="{{$ctrl.about.header_img}}" />
         </div>
     </div>
-    <div class="col">
-        <div class="row">
-            <div class="col-lg-3">
-                <!--Hamburger bar?? Idk-->
-            </div>
-            <div class="col flex-grow-1">
-                <div ng-repeat="p in $ctrl.posts">
-                    <app-subreddit-cardview post="p.data"></app-subreddit-cardview>
-                </div>
-            </div>
-
-            <app-subreddit-sidebar about="$ctrl.about" rules="$ctrl.rules" class="subreddit-sidebar" />
+    <div class="row">
+        <div class="col-lg-3">
+            <!--Hamburger bar?? Idk-->
         </div>
+        <div class="col flex-grow-1">
+            <div ng-repeat="p in $ctrl.posts">
+                <app-subreddit-cardview post="p.data"></app-subreddit-cardview>
+            </div>
+        </div>
+
+        <app-subreddit-sidebar about="$ctrl.about" rules="$ctrl.rules" class="subreddit-sidebar col-padded" />
     </div>
 
     <ui-view />

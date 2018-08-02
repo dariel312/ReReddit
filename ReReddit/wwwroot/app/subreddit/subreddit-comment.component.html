@@ -1,9 +1,9 @@
-﻿<div class="col">
-    <div class="post-comment d-flex">
+﻿<div class="post-comment ">
 
+    <!--Comment-->
+    <div class="d-flex">
         <post-like ups="$ctrl.comment.ups" name="$ctrl.comment.name" />
-
-        <div class="flex-grow-1 col">
+        <div class="col mb-3">
             <span class="text-muted">
                 {{$ctrl.comment.author}}<i ng-if="$ctrl.comment.is_submitter" class="material-icons align-middle">keyboard_voice</i>
                 <span am-time-ago="$ctrl.comment.created_utc | amFromUnix"></span>
@@ -12,12 +12,14 @@
             <span ng-bind-html="$ctrl.comment.body | htmldecode"></span>
         </div>
     </div>
-    <div ng-repeat="c in $ctrl.comment.replies.data.children" ng-if="$ctrl.depth < 5">
-        <app-subreddit-comment comment="c.data" depth="$ctrl.depth + 1"></app-subreddit-comment>
-    </div>
-    <div class="col" ng-if="$ctrl.depth >= 5">
+
+    <!--Children-->
+    <app-subreddit-comment ng-repeat-start="c in $ctrl.comment.replies.data.children" comment="c.data" depth="$ctrl.depth + 1" ng-if="c.kind !== 'more'" />
+    <div class="more-comments" ng-repeat-end ng-if="c.kind == 'more'">
         <div class="post-comment">
-            <a href="#">More Comments (12)</a>
+            <a href="#">More Comments ({{c.data.count}})</a>
+            <!--TODO HOW TO OPEN MORE COMMENTS-->
         </div>
     </div>
+
 </div>

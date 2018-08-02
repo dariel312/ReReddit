@@ -14,6 +14,7 @@
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.component('defaultIcon', DefaultIconComponent);
+    app.component('youtubeEmbed', YoutubeEmbedComponent)
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
 

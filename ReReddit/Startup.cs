@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using ReReddit.Middleware;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 namespace ReReddit
 {
@@ -18,6 +20,22 @@ namespace ReReddit
             services.AddMvc();
             services.AddTransient<Html5mode>();
             services.AddTransient<RedditApi>();
+
+            //Configure Response Compression
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "image/svg+xml" });
+                options.EnableForHttps = true;
+            });
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,6 +46,7 @@ namespace ReReddit
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseResponseCompression();
             app.UseMiddleware<Html5mode>();
             app.UseMvcWithDefaultRoute();
             app.UseDefaultFiles();

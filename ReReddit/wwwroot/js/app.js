@@ -223,14 +223,18 @@ const DefaultIconComponent = {
     }
 }
 const HtmlDecodeFilter = function () {
-    return function (html) {
+    return function (html, isRaw) {
+        if (html == undefined)
+            return "";
 
-        //var decoded = angular.element('<textarea />').html(html).text();
-
-        var decoded = SnuOwnd.getParser().render(html);
-
-
-        return decoded;
+        if (isRaw == false) {
+            var decoded = SnuOwnd.getParser().render(html);
+            return decoded;
+        }
+        else {
+            var decoded = angular.element('<textarea />').html(html).text();
+            return decoded;
+        }
     };
 };
 /*
@@ -296,6 +300,42 @@ const PostLikeComponent = {
 
     }
 }
+/*
+ * Small component that handles Upvotes\Downvotes on a thing
+ */
+const YoutubeEmbedComponent = {
+    template: `
+            <div class="video-responsive" ng-style="{'height' : $ctrl.media.height}">
+                <img ng-src="{{$ctrl.media.thumbnail_url}}" class="img-fluid card-img mx-auto" ng-click="$ctrl.playYoutube($event)" ng-if="!$ctrl.showYoutube" />
+                <svg class="yt-button" version="1.1" viewBox="0 0 68 48" ng-if="!$ctrl.showYoutube" ng-click="$ctrl.playYoutube($event)">
+                    <path class="ytp-large-play-button-bg" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#212121" fill-opacity="0.8"></path><path d="M 45,24 27,14 27,34" fill="#fff"></path>\
+                </svg>
+                <div ng-bind-html="$ctrl.video_embed" ng-if="$ctrl.showYoutube"></div>
+            </div>
+        `,
+    bindings: {
+        media: "<"
+    },
+    controller: function ($filter, $sce) {
+        var $ctrl = this;
+        $ctrl.showYoutube = false;
+
+        $ctrl.playYoutube = function ($event) {
+            $event.stopPropagation();
+
+            //append auto play
+            var html = $filter('htmldecode')($ctrl.media.html, true)
+            var obj = angular.element(html);
+            obj.attr('src', obj.attr('src') + "&autoplay=1");
+            var newObj = angular.element('<div>').append(obj);
+
+            $ctrl.video_embed = $sce.trustAsHtml(newObj.html());
+            $ctrl.showYoutube = true;
+        }
+    }
+
+}
+
 const HomeComponent = {
     templateUrl: "/app/home/home.component.html",
     controller: function () {
@@ -325,50 +365,9 @@ const SubredditCardviewComponent = {
     bindings: {
         post: '<'
     },
-    controller: function (api) {
+    controller: function ($sce, $filter) {
         var $ctrl = this;
-
-        $ctrl.$onInit = function () {
-            $ctrl.post.liked = 0;
-        };
-
-        $ctrl.onLike = function (dir, $event) {
-            $event.stopPropagation();
-            var post = $ctrl.post;
-
-            if (dir === 1) {
-                if (post.liked === 1) { //unlike
-                    dir = 0;
-                    post.ups--;
-                }
-                else if (post.liked === -1) { //dislike to like
-                    post.ups += 2;
-                } else { //neutral to like
-                    post.ups += 1;
-                }
-            }
-            else if (dir === -1) {
-                if (post.liked === -1) { //undislike
-                    dir = 0;
-                    post.ups++;
-                }
-                else if (post.liked === 1) { //like to dislike
-                    post.ups -= 2;
-                } else { //neutral to dislike
-                    post.ups -= 1;
-                }
-            }
-
-            post.liked = dir;
-            api.vote(post.name, dir).then(
-                function (response) {
-
-                }, function (response) {
-                    alert("You're doing that too much.");
-                }
-            );
-        }
-
+      
     }
 };
 const SubredditCommentComponent = {
@@ -391,9 +390,16 @@ const SubredditPostComponent = {
         $ctrl.post = $stateParams.post;
 
         let html = angular.element('html');
+        let onEscHandler = function (e) {
+            if (e.keyCode == 27) {
+                $state.go('^')
+            }
+        };
 
         this.$onInit = function () {
             html.addClass('freeze-scroll');
+            angular.element(document).keyup(onEscHandler);
+
 
             if ($stateParams.subreddit == null)
                 $ctrl.name = $stateParams.name;
@@ -417,11 +423,13 @@ const SubredditPostComponent = {
                 $ctrl.comments = cmts;
             }, function (result) {
                 $state.go('^')
-                });
+            });
 
         };
+
         this.$onDestroy = function () {
             html.removeClass('freeze-scroll');
+            angular.element(document).unbind('keyup', onEscHandler);
         };
 
 
@@ -483,6 +491,7 @@ const SubredditComponent = {
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.component('defaultIcon', DefaultIconComponent);
+    app.component('youtubeEmbed', YoutubeEmbedComponent)
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
 

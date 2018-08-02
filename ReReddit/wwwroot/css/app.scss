@@ -47,9 +47,11 @@ h1, h2, h3, h4, h5, h6 {
     border: none;
     border-radius: 2px;
 }
+
 .img-circle {
-    border-radius:50%;
+    border-radius: 50%;
 }
+
 .modal-header {
     border: none;
 }
@@ -121,3 +123,31 @@ ui-view {
         font-size: 1.6rem;
     }
 }*/
+
+youtube-embed {
+
+    .video-responsive {
+        overflow: hidden;
+        position: relative;
+        display: block;
+
+        iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+    }
+
+    .yt-button {
+        display: block;
+        height: 68px;
+        width: 68px;
+        left: 50%;
+        right: 50%;
+        position: relative;
+        transform: translate(-50%);
+        top: -65%;
+    }
+}
