@@ -146,8 +146,8 @@ youtube-embed {
         width: 68px;
         left: 50%;
         right: 50%;
-        position: relative;
-        transform: translate(-50%);
-        top: -65%;
+        position: absolute;
+        transform: translateY(-50%) translateX(-50%);
+        top: 50%;
     }
 }
