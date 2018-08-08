@@ -12,6 +12,8 @@
             <div ng-repeat="p in $ctrl.posts">
                 <app-subreddit-cardview post="p.data"></app-subreddit-cardview>
             </div>
+
+            <button class="btn btn-link float-right mb-3" ng-click="$ctrl.next()">NEXT</button>
         </div>
 
         <app-subreddit-sidebar about="$ctrl.about" rules="$ctrl.rules" class="subreddit-sidebar col-padded" />

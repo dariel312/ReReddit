@@ -44,19 +44,19 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _get(host + "/r/" + subreddit + "/comments/" + id + ".json");
     };
 
-    this.getSubreddit = function (subreddit) {
+    this.getSubredditPosts = function (subreddit, params) {
 
         if (this.isLoggedIn()) {
             if (subreddit == null)
-                return _get("api/hot");
+                return _get("api/hot", params);
             else
-                return _get("api/r/" + subreddit);
+                return _get("api/r/" + subreddit, params);
         }
         else {
             if (subreddit == null)
-                return _get(host + "/.json");
+                return _get(host + "/.json", params);
             else
-                return _get(host + "/r/" + subreddit + ".json");
+                return _get(host + "/r/" + subreddit + ".json", params);
         }
     };
 
@@ -81,6 +81,15 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
             return _get(host + "/r/" + subreddit + "/about/rules.json");
         }
     }
+
+    this.getSubreddits = function () {
+        if (this.isLoggedIn()) {
+            return _get("api/subreddits/mine/subscriber");
+        }
+        else {
+            return _get(host + "/subreddits/popular.json");
+        }
+    };
 
     //Auth
     this.redirectAuthUrl = function () {

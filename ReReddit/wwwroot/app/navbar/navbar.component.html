@@ -5,11 +5,18 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
+        <!--ng-repeat="c in $ctrl.subreddits"-->
+        <ul class="navbar-nav flex-grow-1">
             <li class="nav-item" ui-sref-active="active">
-                <a class="nav-link" ui-sref="home">Home</a>
+                <a class="nav-link" ui-sref="subreddit({name: c.data.display_name})">{{c.data.display_name}}</a>
             </li>
         </ul>
+        <div class="col-padded">
+            <form ng-submit="$ctrl.submit()">
+                <input placeholder="Goto Subreddit" class="form-control" ng-model="$ctrl.subredditName" />
+                <button type="submit" hidden>Submit</button>
+            </form>
+        </div>
         <div class="form-inline my-2 my-lg-0">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" ng-click="$ctrl.onLogin()" ng-if="!$ctrl.logged_in">Login</button>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" ng-click="$ctrl.onLogout()" ng-if="$ctrl.logged_in">Logoff</button>

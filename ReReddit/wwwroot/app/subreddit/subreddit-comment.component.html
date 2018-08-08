@@ -3,13 +3,20 @@
     <!--Comment-->
     <div class="d-flex">
         <post-like ups="$ctrl.comment.ups" name="$ctrl.comment.name" />
-        <div class="col mb-3">
+        <div class="col mb-2">
             <span class="text-muted">
                 {{$ctrl.comment.author}}<i ng-if="$ctrl.comment.is_submitter" class="material-icons align-middle">keyboard_voice</i>
                 <span am-time-ago="$ctrl.comment.created_utc | amFromUnix"></span>
             </span>
             <br />
             <span ng-bind-html="$ctrl.comment.body | htmldecode"></span>
+            <!--<div>
+                Reply
+                Share
+                Report
+                Save
+                Give gold
+            </div>-->
         </div>
     </div>
 

@@ -68,19 +68,19 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _get(host + "/r/" + subreddit + "/comments/" + id + ".json");
     };
 
-    this.getSubreddit = function (subreddit) {
+    this.getSubredditPosts = function (subreddit, params) {
 
         if (this.isLoggedIn()) {
             if (subreddit == null)
-                return _get("api/hot");
+                return _get("api/hot", params);
             else
-                return _get("api/r/" + subreddit);
+                return _get("api/r/" + subreddit, params);
         }
         else {
             if (subreddit == null)
-                return _get(host + "/.json");
+                return _get(host + "/.json", params);
             else
-                return _get(host + "/r/" + subreddit + ".json");
+                return _get(host + "/r/" + subreddit + ".json", params);
         }
     };
 
@@ -105,6 +105,15 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
             return _get(host + "/r/" + subreddit + "/about/rules.json");
         }
     }
+
+    this.getSubreddits = function () {
+        if (this.isLoggedIn()) {
+            return _get("api/subreddits/mine/subscriber");
+        }
+        else {
+            return _get(host + "/subreddits/popular.json");
+        }
+    };
 
     //Auth
     this.redirectAuthUrl = function () {
@@ -344,16 +353,31 @@ const HomeComponent = {
 };
 const NavbarComponent = {
     templateUrl: "/app/navbar/navbar.component.html",
-    controller: function ($rootScope, api) {
+    controller: function ($rootScope, $state, api) {
         var $ctrl = this;
         $ctrl.logged_in = api.isLoggedIn();
+        $ctrl.subreddits = [];
+        $ctrl.subredditName = null;
+
+        $ctrl.$onInit = function () {
+            api.getSubreddits().then(function (response) {
+                $ctrl.subreddits = response.data.data.children;
+            });
+        }
 
         $ctrl.onLogin = function () {
             api.redirectAuthUrl();
         };
+
         $ctrl.onLogout = function () {
             api.logOff();
         };
+
+        $ctrl.submit = function () {
+            $state.go("subreddit", { name: $ctrl.subredditName })
+            $ctrl.subredditName = null;
+        }
+
         $rootScope.$on('auth-changed', function (event, args) {
             $ctrl.logged_in = api.isLoggedIn();
             alert.log("auth changed from nav");
@@ -457,9 +481,20 @@ const SubredditComponent = {
         $ctrl.about = null;
         $ctrl.rules = null;
 
+
+        $ctrl.next = function () {
+            console.log($ctrl.listing);
+            api.getSubredditPosts($stateParams.name, { after: $ctrl.listing.after, count: $ctrl.posts.length }).then(function (result) {
+                $ctrl.listing = result.data.data;
+                result.data.data.children.forEach(function (item) {
+                    $ctrl.posts.push(item);
+                });
+            });
+        }
+
         $ctrl.$onInit = function () {
 
-            api.getSubreddit($stateParams.name).then(function (result) {
+            api.getSubredditPosts($stateParams.name).then(function (result) {
                 $ctrl.listing = result.data.data;
                 $ctrl.posts = result.data.data.children;
             });

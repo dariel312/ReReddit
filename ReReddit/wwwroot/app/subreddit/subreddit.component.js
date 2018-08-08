@@ -8,9 +8,20 @@
         $ctrl.about = null;
         $ctrl.rules = null;
 
+
+        $ctrl.next = function () {
+            console.log($ctrl.listing);
+            api.getSubredditPosts($stateParams.name, { after: $ctrl.listing.after, count: $ctrl.posts.length }).then(function (result) {
+                $ctrl.listing = result.data.data;
+                result.data.data.children.forEach(function (item) {
+                    $ctrl.posts.push(item);
+                });
+            });
+        }
+
         $ctrl.$onInit = function () {
 
-            api.getSubreddit($stateParams.name).then(function (result) {
+            api.getSubredditPosts($stateParams.name).then(function (result) {
                 $ctrl.listing = result.data.data;
                 $ctrl.posts = result.data.data.children;
             });
