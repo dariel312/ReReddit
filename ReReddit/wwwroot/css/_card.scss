@@ -12,13 +12,12 @@
     }
 }
 
-.card-body{
+.card-body {
     padding: 1rem 1.25rem;
 }
 
 .card-misc-info {
     /*font-size: 0.9rem;*/
-
     span:not(:last-child)::after,
     a:not(:last-child)::after,
     div:not(:last-child)::after {
@@ -26,7 +25,11 @@
     }
 }
 
-.card-header{
+.card-header {
     margin: -1px; /*Fix for that ugly line border thing*/
-    border:none;
+    border: none;
+}
+
+.card-img-top > img {
+
 }

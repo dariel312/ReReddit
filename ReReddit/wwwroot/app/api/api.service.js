@@ -1,7 +1,7 @@
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state, $q, $timeout) {
     const self = this;
     const host = "https://www.reddit.com";
     const client_id = "TDmT_7LQ_5LkmQ";
@@ -10,6 +10,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     const api_scope = "identity, edit, flair, history, modconfig, modflair, modlog, modposts, modwiki, mysubreddits, privatemessages, read, report, save, submit, subscribe, vote, wikiedit, wikiread";
     const token_key = "auth_token";
     var auth_info = null;
+    var identity = null;
 
     //load stored data
     auth_info = JSON.parse($window.localStorage.getItem(token_key));
@@ -36,7 +37,10 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     };
 
     function onAuthChanged() {
-        $rootScope.$broadcast('auth-changed');
+        $timeout(function () {
+            $rootScope.$broadcast('auth-changed');
+            console.log("AUTH CHANGE BOOM");
+        });
     }
 
     //Subreddit
@@ -126,5 +130,30 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
 
         return true;
     };
+    this.getMe = function () {
+        //user data is cached
+        var deferred = $q.defer();
+
+        if (identity != null) {
+
+            $timeout(function () {
+                deferred.resolve(identity);
+            });
+
+        } else {
+            _get("/api/api/v1/me").then(function (response) {
+                identity = response.data;
+                deferred.resolve(identity);
+                return response;
+            }, function (response) {
+
+                deferred.reject(response);
+                return response;
+            });
+        }
+
+        //RETURNS USER DATA NOT HTTP RESPONSE       
+        return deferred.promise;
+    }
 
 };

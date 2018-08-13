@@ -13,6 +13,7 @@
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
+    app.component('postMedia', PostMediaComponent);
     app.component('defaultIcon', DefaultIconComponent);
     app.component('youtubeEmbed', YoutubeEmbedComponent)
     app.filter('bignumber', BigNumberFilter);

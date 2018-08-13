@@ -10,7 +10,7 @@
         </div>
         <div class="col flex-grow-1">
             <div ng-repeat="p in $ctrl.posts">
-                <app-subreddit-cardview post="p.data"></app-subreddit-cardview>
+                <app-subreddit-cardview post="p.data" />
             </div>
 
             <button class="btn btn-link float-right mb-3" ng-click="$ctrl.next()">NEXT</button>

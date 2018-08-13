@@ -19,10 +19,13 @@ const AuthComponent = {
             return hashParams;
         }
 
-        var c = getHashParams();
-        if (c.access_token !== undefined)
-            api.setAuth(c);
+        $ctrl.$onInit = function () {
 
-        $state.go('home');
+            var c = getHashParams();
+            if (c.access_token !== undefined)
+                api.setAuth(c);
+
+            $state.go('home');
+        };
     }
 };

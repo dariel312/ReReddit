@@ -1,6 +1,6 @@
 ﻿const SubredditComponent = {
     templateUrl: "/app/subreddit/subreddit.component.html",
-    controller: function ($stateParams, api) {
+    controller: function ($stateParams, $window, api) {
         var $ctrl = this;
         $ctrl.name = $stateParams.name;
         $ctrl.listing = [];
@@ -28,6 +28,8 @@
 
             api.getSubredditAbout($stateParams.name).then(function (result) {
                 $ctrl.about = result.data.data;
+
+                $window.document.title = "Re: " + $ctrl.about.title;
             });
 
             api.getSubredditRules($stateParams.name).then(function (result) {

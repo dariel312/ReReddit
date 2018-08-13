@@ -25,7 +25,7 @@ var ApiInterceptor = function ($q, $window, $injector) {
 /*
     Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state, $q, $timeout) {
     const self = this;
     const host = "https://www.reddit.com";
     const client_id = "TDmT_7LQ_5LkmQ";
@@ -34,6 +34,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     const api_scope = "identity, edit, flair, history, modconfig, modflair, modlog, modposts, modwiki, mysubreddits, privatemessages, read, report, save, submit, subscribe, vote, wikiedit, wikiread";
     const token_key = "auth_token";
     var auth_info = null;
+    var identity = null;
 
     //load stored data
     auth_info = JSON.parse($window.localStorage.getItem(token_key));
@@ -60,7 +61,10 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     };
 
     function onAuthChanged() {
-        $rootScope.$broadcast('auth-changed');
+        $timeout(function () {
+            $rootScope.$broadcast('auth-changed');
+            console.log("AUTH CHANGE BOOM");
+        });
     }
 
     //Subreddit
@@ -150,6 +154,31 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
 
         return true;
     };
+    this.getMe = function () {
+        //user data is cached
+        var deferred = $q.defer();
+
+        if (identity != null) {
+
+            $timeout(function () {
+                deferred.resolve(identity);
+            });
+
+        } else {
+            _get("/api/api/v1/me").then(function (response) {
+                identity = response.data;
+                deferred.resolve(identity);
+                return response;
+            }, function (response) {
+
+                deferred.reject(response);
+                return response;
+            });
+        }
+
+        //RETURNS USER DATA NOT HTTP RESPONSE       
+        return deferred.promise;
+    }
 
 };
 /*This component is used just to take in the Redirect OAuth from reddit.*/
@@ -173,11 +202,14 @@ const AuthComponent = {
             return hashParams;
         }
 
-        var c = getHashParams();
-        if (c.access_token !== undefined)
-            api.setAuth(c);
+        $ctrl.$onInit = function () {
 
-        $state.go('home');
+            var c = getHashParams();
+            if (c.access_token !== undefined)
+                api.setAuth(c);
+
+            $state.go('home');
+        };
     }
 };
 const BigNumberFilter = function () {
@@ -310,6 +342,21 @@ const PostLikeComponent = {
     }
 }
 /*
+ * Component to handle media posts
+ */
+const PostMediaComponent = {
+    templateUrl: "/app/common/post-media.component.html",
+    bindings: {
+        post: "<"
+    },
+    controller: function () {
+        var $ctrl = this;
+       
+    }
+
+}
+
+/*
  * Small component that handles Upvotes\Downvotes on a thing
  */
 const YoutubeEmbedComponent = {
@@ -358,10 +405,20 @@ const NavbarComponent = {
         $ctrl.logged_in = api.isLoggedIn();
         $ctrl.subreddits = [];
         $ctrl.subredditName = null;
+        $ctrl.user = null;
 
         $ctrl.$onInit = function () {
+            $rootScope.$on('auth-changed', function (event, args) {
+                $ctrl.logged_in = api.isLoggedIn();
+                console.log("auth changed from nav: " + $ctrl.logged_in);
+            });
+
             api.getSubreddits().then(function (response) {
                 $ctrl.subreddits = response.data.data.children;
+            });
+
+            api.getMe().then(function (user) {
+                $ctrl.user = user;
             });
         }
 
@@ -378,10 +435,7 @@ const NavbarComponent = {
             $ctrl.subredditName = null;
         }
 
-        $rootScope.$on('auth-changed', function (event, args) {
-            $ctrl.logged_in = api.isLoggedIn();
-            alert.log("auth changed from nav");
-        });
+       
     }
 };
 const SubredditCardviewComponent = {
@@ -473,7 +527,7 @@ const SubredditSidebarComponent = {
 };
 const SubredditComponent = {
     templateUrl: "/app/subreddit/subreddit.component.html",
-    controller: function ($stateParams, api) {
+    controller: function ($stateParams, $window, api) {
         var $ctrl = this;
         $ctrl.name = $stateParams.name;
         $ctrl.listing = [];
@@ -501,6 +555,8 @@ const SubredditComponent = {
 
             api.getSubredditAbout($stateParams.name).then(function (result) {
                 $ctrl.about = result.data.data;
+
+                $window.document.title = "Re: " + $ctrl.about.title;
             });
 
             api.getSubredditRules($stateParams.name).then(function (result) {
@@ -525,6 +581,7 @@ const SubredditComponent = {
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
+    app.component('postMedia', PostMediaComponent);
     app.component('defaultIcon', DefaultIconComponent);
     app.component('youtubeEmbed', YoutubeEmbedComponent)
     app.filter('bignumber', BigNumberFilter);

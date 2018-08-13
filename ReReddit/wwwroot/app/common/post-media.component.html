@@ -1,0 +1,24 @@
+﻿<img ng-src="{{$ctrl.post.preview.images[0].source.url}}" class="card-img img-fluid mx-auto" 
+     ng-if="$ctrl.post.preview.images.length > 0  && $ctrl.post.preview.reddit_video_preview  == null && $ctrl.post.media.type != 'youtube.com'" />
+
+<!--For Gifs-->
+<video controls loop preload="none" muted
+       ng-if="$ctrl.post.preview.reddit_video_preview != null"
+       class="img-fluid mx-auto d-block"
+       ng-click="$event.stopPropagation()"
+       poster="{{$ctrl.post.preview.images[0].source.url | htmldecode}}">
+    <source ng-src="{{$ctrl.post.preview.reddit_video_preview.fallback_url}}">
+</video>
+
+<!--For Reddit Videos-->
+<video controls preload="none" muted
+       ng-if="$ctrl.post.media.reddit_video != null"
+       class="img-fluid mx-auto d-block"
+       ng-click="$event.stopPropagation()"
+       poster="{{$ctrl.post.preview.images[0].source.url | htmldecode}}">
+    >
+    <source ng-src="{{$ctrl.post.media.reddit_video.fallback_url}}" />
+</video>
+
+<!--For Youtube-->
+<youtube-embed media="$ctrl.post.media.oembed" ng-if="$ctrl.post.media.type == 'youtube.com'" />

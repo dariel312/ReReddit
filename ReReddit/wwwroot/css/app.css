@@ -149,7 +149,8 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
   background-color: #084a7a;
   color: white;
-  box-shadow: none; }
+  box-shadow: none;
+  padding: 0.5rem 1rem; }
 
 .font-small {
   font-size: 0.8rem; }

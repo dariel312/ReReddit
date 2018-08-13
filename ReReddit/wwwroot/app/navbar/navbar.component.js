@@ -5,10 +5,20 @@
         $ctrl.logged_in = api.isLoggedIn();
         $ctrl.subreddits = [];
         $ctrl.subredditName = null;
+        $ctrl.user = null;
 
         $ctrl.$onInit = function () {
+            $rootScope.$on('auth-changed', function (event, args) {
+                $ctrl.logged_in = api.isLoggedIn();
+                console.log("auth changed from nav: " + $ctrl.logged_in);
+            });
+
             api.getSubreddits().then(function (response) {
                 $ctrl.subreddits = response.data.data.children;
+            });
+
+            api.getMe().then(function (user) {
+                $ctrl.user = user;
             });
         }
 
@@ -25,9 +35,6 @@
             $ctrl.subredditName = null;
         }
 
-        $rootScope.$on('auth-changed', function (event, args) {
-            $ctrl.logged_in = api.isLoggedIn();
-            alert.log("auth changed from nav");
-        });
+       
     }
 };

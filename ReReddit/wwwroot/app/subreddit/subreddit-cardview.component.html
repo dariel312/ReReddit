@@ -1,10 +1,6 @@
 ﻿<div class="card subreddit-cardview form-group" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
     <div class="card-img-top">
-        <img ng-src="{{$ctrl.post.preview.images[0].source.url}}" class="card-img img-fluid mx-auto" ng-if="$ctrl.post.preview.images.length > 0  && $ctrl.post.preview.reddit_video_preview  == null && $ctrl.post.media.type != 'youtube.com'" />
-        <video controls loop ng-if="$ctrl.post.preview.reddit_video_preview != null" class="img-fluid mx-auto d-block" ng-click="$event.stopPropagation()">
-            <source ng-src="{{$ctrl.post.preview.reddit_video_preview.fallback_url}}">
-        </video>
-        <youtube-embed media="$ctrl.post.media.oembed" ng-if="$ctrl.post.media.type == 'youtube.com'"/>
+       <post-media post="$ctrl.post"/>
     </div>
     <div class="card-body">
         <div class="row">
