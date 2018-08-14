@@ -1,16 +1,28 @@
 ﻿const NavbarComponent = {
     templateUrl: "/app/navbar/navbar.component.html",
-    controller: function ($rootScope, $state, api) {
+    controller: function ($rootScope, $state, $transitions, api) {
         var $ctrl = this;
         $ctrl.logged_in = api.isLoggedIn();
         $ctrl.subreddits = [];
         $ctrl.subredditName = null;
         $ctrl.user = null;
+        $ctrl.current = "FrontPage";
 
         $ctrl.$onInit = function () {
             $rootScope.$on('auth-changed', function (event, args) {
                 $ctrl.logged_in = api.isLoggedIn();
-                console.log("auth changed from nav: " + $ctrl.logged_in);
+            });
+
+            $transitions.onSuccess({}, function (transition) {
+                var to = transition.to();
+                var params = transition.params();
+
+                if (to.name == 'subreddit') {
+                    $ctrl.current = params.name;
+                }
+                else if (to.name == 'home') {
+                    $ctrl.current = "Home";
+                }
             });
 
             api.getSubreddits().then(function (response) {
@@ -20,6 +32,7 @@
             api.getMe().then(function (user) {
                 $ctrl.user = user;
             });
+
         }
 
         $ctrl.onLogin = function () {

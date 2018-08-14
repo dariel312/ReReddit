@@ -28,13 +28,19 @@ var ApiInterceptor = function ($q, $window, $injector) {
 const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state, $q, $timeout) {
     const self = this;
     const host = "https://www.reddit.com";
-    const client_id = "TDmT_7LQ_5LkmQ";
-    const client_secret = "";
-    const redirect_uri = "http://localhost:55840/auth";
+    let client_id = "t1woxVATacs9Wg";
+    let client_secret = "";
+    let redirect_uri = "http://localhost:55840/auth";
     const api_scope = "identity, edit, flair, history, modconfig, modflair, modlog, modposts, modwiki, mysubreddits, privatemessages, read, report, save, submit, subscribe, vote, wikiedit, wikiread";
     const token_key = "auth_token";
     var auth_info = null;
     var identity = null;
+
+    if (ENVIRONMENT == "PROD") {
+        client_id = "TDmT_7LQ_5LkmQ";
+        client_secret = "";
+        redirect_uri = "http://rereddit.dariel.io/auth";
+    }
 
     //load stored data
     auth_info = JSON.parse($window.localStorage.getItem(token_key));
@@ -127,12 +133,14 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     this.setAuth = function (response) {
         response.expires_at = moment().add(response.expires_in, "seconds");
         $window.localStorage.setItem(token_key, JSON.stringify(response));
+        auth_info = response;
         onAuthChanged();
     };
 
     this.logOff = function () {
         if (self.isLoggedIn) {
             $window.localStorage.removeItem(token_key);
+            auth_info = null;
             onAuthChanged();
             $state.go("home");
         }
@@ -400,17 +408,29 @@ const HomeComponent = {
 };
 const NavbarComponent = {
     templateUrl: "/app/navbar/navbar.component.html",
-    controller: function ($rootScope, $state, api) {
+    controller: function ($rootScope, $state, $transitions, api) {
         var $ctrl = this;
         $ctrl.logged_in = api.isLoggedIn();
         $ctrl.subreddits = [];
         $ctrl.subredditName = null;
         $ctrl.user = null;
+        $ctrl.current = "FrontPage";
 
         $ctrl.$onInit = function () {
             $rootScope.$on('auth-changed', function (event, args) {
                 $ctrl.logged_in = api.isLoggedIn();
-                console.log("auth changed from nav: " + $ctrl.logged_in);
+            });
+
+            $transitions.onSuccess({}, function (transition) {
+                var to = transition.to();
+                var params = transition.params();
+
+                if (to.name == 'subreddit') {
+                    $ctrl.current = params.name;
+                }
+                else if (to.name == 'home') {
+                    $ctrl.current = "Home";
+                }
             });
 
             api.getSubreddits().then(function (response) {
@@ -420,6 +440,7 @@ const NavbarComponent = {
             api.getMe().then(function (user) {
                 $ctrl.user = user;
             });
+
         }
 
         $ctrl.onLogin = function () {

@@ -1,10 +1,23 @@
 ﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top">
-    <a class="navbar-brand" ui-sref="home">Re:Reddit</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand col-padded" ui-sref="home">Re:Reddit</a>
+    <div class="">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+ 
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+
+        <div class="col-auto nav-item dropdown">
+            <button class="btn btn-block btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">{{$ctrl.current}}</button>
+            <div class="dropdown-menu dropdown-menu-right font-small" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" ui-sref="home">FrontPage</a>
+                <a class="dropdown-item" ui-sref="subreddit({name: c.data.display_name})" ng-repeat="c in $ctrl.subreddits">{{c.data.display_name}}</a>
+                <!--<div class="dropdown-divider"></div>-->
+            </div>
+        </div>
+
         <!--ng-repeat="c in $ctrl.subreddits"-->
         <ul class="navbar-nav flex-grow-1">
             <li class="nav-item" ui-sref-active="active">
@@ -17,12 +30,15 @@
                 <button type="submit" hidden>Submit</button>
             </form>
         </div>
-        <div ng-if="!$ctrl.logged_in">
+        <div class="col-padded" ng-if="!$ctrl.logged_in">
             <button class="btn btn-outline-success" type="submit" ng-click="$ctrl.onLogin()" ng-if="!$ctrl.logged_in">Login</button>
         </div>
-        <div ng-if="$ctrl.logged_in" class="nav-item dropdown">
-            <button class="btn btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">{{$ctrl.user.name}}</button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+        <div ng-if="$ctrl.logged_in" class="nav-item dropdown col-padded">
+            <button class="btn btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+            {{$ctrl.user.name}}
+                <img  class="nav-user-icon" ng-src="{{$ctrl.user.icon_img}}" />
+            </button>
+            <div class="dropdown-menu dropdown-menu-right font-small" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Action</a>
                 <a class="dropdown-item" href="#">Another action</a>
                 <div class="dropdown-divider"></div>

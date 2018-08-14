@@ -150,7 +150,15 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #084a7a;
   color: white;
   box-shadow: none;
-  padding: 0.5rem 1rem; }
+  padding: 0.5rem 0rem; }
+
+.navbar-brand {
+  margin: 0; }
+
+.nav-user-icon {
+  border-radius: 50%;
+  height: 20px;
+  width: 20px; }
 
 .font-small {
   font-size: 0.8rem; }
