@@ -1,0 +1,13 @@
+﻿-Reply to a post
+-Reply to a comment within a post
+-Display user profile
+-Display your own profile
+-Infinite Scroll
+-Subreddit header toolbar
+	-Ability to change view from Card View to List View and classic view
+-Subreddit List View
+-Subreddit Classic view
+-Collapse Sidebar on mobile
+-Click on More Comments to view more comments 
+-Collapse Comments 
+-Fix login process to use OAUTH with secret
