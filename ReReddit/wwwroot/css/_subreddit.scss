@@ -1,6 +1,24 @@
 ﻿@import "_variables.scss";
 
+:root{
+    --subreddit-primary-color: $color-primary;
+    --subreddit-key-color: $color-primary;
+}
+
 .subreddit-header {
+
+    .header-title {
+        background-color: var(--subreddit-primary-color);
+        color: white;
+    }
+
+    .header-bar {
+        border-bottom: solid 1px #cacaca;
+        padding: 0.6rem 0;
+    }
+
+    .header-pages {
+    }
 }
 
 .subreddit-sidebar {
@@ -10,6 +28,11 @@
         width: 32px;
         height: 32px;
         margin: 0 0.5rem;
+    }
+
+    .btn-subscribe{
+        background-color: var(--subreddit-key-color);
+        border-color: var(--subreddit-key-color);
     }
 }
 
@@ -104,7 +127,7 @@ app-subreddit-comment {
             overflow-wrap: break-word;
         }
 
-        a, span{
+        a, span {
             word-wrap: break-word;
             overflow-wrap: break-word;
             word-break: break-all;

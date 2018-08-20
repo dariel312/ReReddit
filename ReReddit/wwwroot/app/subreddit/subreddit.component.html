@@ -1,14 +1,30 @@
-﻿<div class="container-fluid container-lg content-main subreddit">
+﻿<!--Header-->
+<div class="content-main subreddit-header mb-5">
+    <div class="header-title">
+        <div class="container-fluid container-lg pt-3 pb-2">
+            <h3>
+                <default-icon /> /r/{{$ctrl.name}}
+            </h3>
+        </div>
+    </div>
+    <div class="header-pages">
+
+    </div>
+    <div class="header-bar">
+        <div class="container-fluid container-lg">
+            View: A B C
+        </div>
+    </div>
+</div>
+<!--Body-->
+<div class="container-fluid container-lg">
     <div class="row">
         <div class="col mb-3">
             <img class="mx-auto d-block" ng-src="{{$ctrl.about.header_img}}" />
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-1 col-lg-3">
-            <!--Hamburger bar?? Idk-->
-        </div>
-        <div class="col flex-grow-1">
+    <div class="row justify-content-end">
+        <div class="col col-md-6">
             <div ng-repeat="p in $ctrl.placeholders">
                 <div class="card subreddit-card-placeholder mb-3">
                     <div class="card-img-top"></div>

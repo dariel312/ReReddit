@@ -4,8 +4,8 @@
         <div class="row mb-3">
             <div class="col">
                 <div class="row">
-                    <img class="img-circle subreddit-icon" ng-src="{{$ctrl.about.icon_img}}" ng-if="$ctrl.about.icon_img != ''"/>
-                    <default-icon color="$ctrl.about.primary_color" ng-if="$ctrl.about.icon_img == ''"/>
+                    <img class="img-circle subreddit-icon" ng-src="{{$ctrl.about.icon_img}}" ng-if="$ctrl.about.icon_img != ''" />
+                    <default-icon color="$ctrl.about.primary_color" ng-if="$ctrl.about.icon_img == ''" />
                     <h5>{{$ctrl.about.url}}</h5>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <br />
                 <small>Subscribers</small>
             </div>
-        </div>  
+        </div>
 
         <!--Description-->
         <div class="row mb-3">
@@ -35,7 +35,7 @@
         <!--Subscribed-->
         <div class="row">
             <div class="col">
-                <button class="btn btn-block btn-primary" ng-class="{'btn-outline-primary': !$ctrl.about.user_is_subscriber}">
+                <button class="btn btn-block btn-primary btn-subscribe">
                     {{$ctrl.about.user_is_subscriber? 'Subscribed' : 'Subscribe'}}
                 </button>
             </div>

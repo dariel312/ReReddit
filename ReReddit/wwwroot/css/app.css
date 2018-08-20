@@ -4,6 +4,17 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700');*/
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 @import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
+/*$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+$grid-breakpoints: (
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px );
+
+$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
 /*post card view*/
 .card-post-title {
   font-size: 1.20rem; }
@@ -26,12 +37,38 @@
   /*Fix for that ugly line border thing*/
   border: none; }
 
+/*$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+$grid-breakpoints: (
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px );
+
+$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
+:root {
+  --subreddit-primary-color: #007bff;
+  --subreddit-key-color: #007bff; }
+
+.subreddit-header .header-title {
+  background-color: var(--subreddit-primary-color);
+  color: white; }
+
+.subreddit-header .header-bar {
+  border-bottom: solid 1px #cacaca;
+  padding: 0.6rem 0; }
+
 .subreddit-sidebar {
   width: 19rem; }
   .subreddit-sidebar .subreddit-icon {
     width: 32px;
     height: 32px;
     margin: 0 0.5rem; }
+  .subreddit-sidebar .btn-subscribe {
+    background-color: var(--subreddit-key-color);
+    border-color: var(--subreddit-key-color); }
 
 .subreddit-card-placeholder {
   height: 18rem; }
@@ -116,6 +153,17 @@ app-subreddit-comment {
     display: block;
     margin: auto; }
 
+/*$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+$grid-breakpoints: (
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px );
+
+$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
 /*Navbar*/
 .navbar {
   background-color: #084a7a;
@@ -135,6 +183,17 @@ app-subreddit-comment {
   height: 20px;
   width: 20px; }
 
+/*$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+$grid-breakpoints: (
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px );
+
+$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
 /*Scroll bar*/
 ::-webkit-scrollbar {
   width: 6px; }
@@ -160,7 +219,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans"; }
 
 .content-main {
-  margin-top: 54px; }
+  margin-top: 51px; }
 
 .col-padded {
   padding: 0 15px; }

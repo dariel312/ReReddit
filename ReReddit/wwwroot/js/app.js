@@ -583,6 +583,10 @@ const SubredditComponent = {
             api.getSubredditAbout($stateParams.name).then(function (result) {
                 $ctrl.about = result.data.data;
 
+                var html = document.getElementsByTagName('html')[0];
+                html.style.setProperty("--subreddit-primary-color", $ctrl.about.primary_color);
+                html.style.setProperty("--subreddit-key-color", $ctrl.about.key_color);
+
                 $window.document.title = "Re: " + $ctrl.about.title;
             });
 

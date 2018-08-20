@@ -11,6 +11,7 @@ $bezier-aceleration: cubic-bezier(0.4, 0.0, 1, 1);
 $bezier-sharp: cubic-bezier(0.4, 0.0, 0.6, 1);
 $bezier-motion: cubic-bezier(0.53, -0.01, 0.16, 0.99);
 
+$color-primary: #007bff;
 
 $shadow-d1: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
 $shadow-d2: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);
@@ -24,5 +25,17 @@ $grid-md: 768px;
 $grid-lg: 992px;
 $grid-xl: 1200px;
 
+/*$grid-columns: 12;
+$grid-gutter-width: 30px;
 
-$navbar-height: 54px;
+$grid-breakpoints: (
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px );
+
+$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
+
+
+$navbar-height: 51px;
