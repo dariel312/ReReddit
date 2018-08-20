@@ -37,7 +37,7 @@
                         </div>
                         <div class="row">
                             <div class="col" ng-if="$ctrl.post.preview != undefined">
-                                <img ng-src="{{$ctrl.post.preview.images[0].source.url}}" class="img-fluid mx-auto d-block" />
+                                <post-media post="$ctrl.post" />
                             </div>
                             <div class="col" ng-if="$ctrl.post.preview == undefined">
                                 <span ng-bind-html="$ctrl.post.selftext"></span>
@@ -57,6 +57,11 @@
                         <div class="row justify-content-end">
                             <div class="col form-group">
                                 <button class="btn btn-primary">Reply</button>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center" ng-if="$ctrl.comments.length == 0">
+                            <div class="col col-sm-3 col-md-2">
+                                <img src="/img/icon_spinner.svg" class="mx-auto d-block img-fluid" />
                             </div>
                         </div>
                         <div ng-repeat="c in $ctrl.comments" class="row">

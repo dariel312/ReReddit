@@ -1,8 +1,14 @@
 ﻿@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+/*@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:300,400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,500,700');*/
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+
 @import "_card.scss";
 @import "_subreddit.scss";
 @import "_navbar.scss";
+@import "_text.scss";
 
 /*Scroll bar*/
 ::-webkit-scrollbar {
@@ -21,9 +27,13 @@
     background: #555;
 }
 
-body {
+html {
     font-size: 0.95rem;
+}
+
+body {
     font-family: $font-default;
+    color: #111111;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -69,10 +79,13 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.8rem;
 }
 
+.text-condensed {
+    font-family: $font-condensed;
+}
 
 /*Dropdown*/
-.dropdown-menu{
-    border:none;
+.dropdown-menu {
+    border: none;
     box-shadow: $shadow-d3;
 }
 
@@ -148,5 +161,11 @@ youtube-embed {
         position: absolute;
         transform: translateY(-50%) translateX(-50%);
         top: 50%;
+    }
+}
+
+post-media {
+    video {
+        max-height: calc(100vh - 6rem);
     }
 }

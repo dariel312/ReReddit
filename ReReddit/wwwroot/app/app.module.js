@@ -20,8 +20,9 @@
     app.filter('htmldecode', HtmlDecodeFilter);
 
     //Configure angular here
-    app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider) {
+    app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider, $rootScopeProvider) {
         $locationProvider.html5Mode(true);
+        $rootScopeProvider.digestTtl(15);
         $urlRouterProvider.otherwise('/');
 
         $stateProvider
