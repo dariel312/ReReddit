@@ -1,9 +1,11 @@
 ﻿<!--Header-->
-<div class="content-main subreddit-header mb-5">
+<div class="content-main subreddit-header mb-4">
     <div class="header-title">
         <div class="container-fluid container-lg pt-3 pb-2">
             <h3>
-                <default-icon /> /r/{{$ctrl.name}}
+                <img class="img-circle subreddit-icon" ng-src="{{$ctrl.about.icon_img}}" ng-if="$ctrl.about.icon_img != ''" />
+                <default-icon color="$ctrl.about.primary_color" ng-if="$ctrl.about.icon_img == ''" />
+                <span>/r/{{$ctrl.name}}</span>
             </h3>
         </div>
     </div>
@@ -18,13 +20,9 @@
 </div>
 <!--Body-->
 <div class="container-fluid container-lg">
-    <div class="row">
-        <div class="col mb-3">
-            <img class="mx-auto d-block" ng-src="{{$ctrl.about.header_img}}" />
-        </div>
-    </div>
     <div class="row justify-content-end">
         <div class="col col-md-6">
+            <!--Place Holders-->
             <div ng-repeat="p in $ctrl.placeholders">
                 <div class="card subreddit-card-placeholder mb-3">
                     <div class="card-img-top"></div>

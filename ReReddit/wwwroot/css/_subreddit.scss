@@ -1,11 +1,16 @@
 ﻿@import "_variables.scss";
 
-:root{
-    --subreddit-primary-color: $color-primary;
+:root {
+    --subreddit-primary-color: #084a7a;
     --subreddit-key-color: $color-primary;
 }
 
 .subreddit-header {
+
+    .subreddit-icon {
+        height: 50px;
+        width: 50px;
+    }
 
     .header-title {
         background-color: var(--subreddit-primary-color);
@@ -30,9 +35,15 @@
         margin: 0 0.5rem;
     }
 
-    .btn-subscribe{
+    .btn-subscribe {
         background-color: var(--subreddit-key-color);
         border-color: var(--subreddit-key-color);
+    }
+
+    .btn-subscribe-outline {
+        background-color: white;
+        border-color: var(--subreddit-key-color);
+        color: var(--subreddit-key-color);
     }
 }
 
@@ -114,7 +125,7 @@ app-subreddit-comment {
 
     .post-comment {
         border-left: 2px solid;
-        border-color: #0089ff;
+        border-color: $color-primary;
         padding-left: 0.5rem;
         margin: 0 0 0rem 0px;
         font-size: 0.9rem;
@@ -143,12 +154,9 @@ app-subreddit-comment {
     transition: 0.2s $bezier-deceleration;
     transform: scale(1);
     cursor: pointer;
-    /*box-shadow: $shadow-d1;
-    border:none;*/
+
     &:hover {
         border: 1px solid rgba(0, 0, 0, 0.36);
-        /*box-shadow: $shadow-d2;
-        transform: scale(1.01);*/
     }
 
     .card-img-top {

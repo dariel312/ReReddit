@@ -35,7 +35,7 @@
         <!--Subscribed-->
         <div class="row">
             <div class="col">
-                <button class="btn btn-block btn-primary btn-subscribe">
+                <button class="btn btn-block btn-primary btn-subscribe" ng-class="{'btn-subscribe-outline': $ctrl.about.user_is_subscriber}">
                     {{$ctrl.about.user_is_subscriber? 'Subscribed' : 'Subscribe'}}
                 </button>
             </div>
@@ -53,6 +53,8 @@
     <div class="card-body">
         <div ng-repeat="n in $ctrl.rules">
             {{n.priority + 1}}. {{n.short_name}}
+            <!--<br /> TODO NEEDS MARKDOWN -->
+           <!--{{n.description}}-->
         </div>
     </div>
 </div>

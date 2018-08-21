@@ -165,7 +165,22 @@ youtube-embed {
 }
 
 post-media {
+    display: block;
+    background-color: black;
+    border-radius: calc(0.25rem - 1px);
+
     video {
         max-height: calc(100vh - 6rem);
+    }
+
+    img {
+        display: block;
+        width: auto;
+        border-radius: calc(0.25rem - 1px);
+        max-width: 100%;
+
+        @media screen and (min-width: $grid-sm) {
+            max-height: calc(100vh - 6rem);
+        }
     }
 }
