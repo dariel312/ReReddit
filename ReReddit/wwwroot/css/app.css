@@ -38,8 +38,8 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
   border: none; }
 
 .card-img-left {
-  margin-top: -16px;
-  margin-bottom: -16px;
+  margin-top: -15px;
+  margin-bottom: -15px;
   margin-left: -5px;
   border-radius: 0.25rem;
   padding: 0; }
@@ -172,6 +172,20 @@ app-subreddit-comment {
     display: block;
     margin: auto; }
 
+.subreddit-listview {
+  transition: 0.2s cubic-bezier(0, 0, 0.2, 1);
+  transform: scale(1);
+  cursor: pointer; }
+  .subreddit-listview:hover {
+    border: 1px solid rgba(0, 0, 0, 0.36); }
+  .subreddit-listview .thumbnail {
+    display: block;
+    height: 100%;
+    width: 144px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover; }
+
 /*$grid-columns: 12;
 $grid-gutter-width: 30px;
 
@@ -226,8 +240,29 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
 ::-webkit-scrollbar-thumb:hover {
   background: #555; }
 
+/*html {
+    font-size: 1rem;
+}
+
+ @media screen and (min-width: $grid-sm) {
+    html {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width:$grid-md) {
+    html {
+        font-size: 1.4rem;
+    }
+}
+
+@media screen and (min-width:$grid-lg) {
+    html {
+        font-size: 1.6rem;
+    }
+}*/
 html {
-  font-size: 0.95rem; }
+  font-size: 0.875rem; }
 
 body {
   font-family: "Open Sans";
@@ -238,7 +273,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans"; }
 
 .content-main {
-  margin-top: 51px; }
+  margin-top: 3.294rem; }
 
 .col-padded {
   padding: 0 15px; }
@@ -290,27 +325,6 @@ ui-view {
   ui-view.ng-enter-active {
     opacity: 1; }
 
-/*html {
-    font-size: 1rem;
-}
-
- @media screen and (min-width: $grid-sm) {
-    html {
-        font-size: 1.2rem;
-    }
-}
-
-@media screen and (min-width:$grid-md) {
-    html {
-        font-size: 1.4rem;
-    }
-}
-
-@media screen and (min-width:$grid-lg) {
-    html {
-        font-size: 1.6rem;
-    }
-}*/
 youtube-embed .video-responsive {
   overflow: hidden;
   position: relative;
@@ -346,4 +360,3 @@ post-media {
     @media screen and (min-width: 576px) {
       post-media img {
         max-height: calc(100vh - 6rem); } }
-

@@ -1,18 +1,10 @@
-﻿<div class="card subreddit-cardview form-group" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
+﻿<div class="card subreddit-listview form-group" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
 
     <div class="card-body">
         <div class="row">
             <div class="card-img-left d-flex align-items-center" ng-if="$ctrl.post.thumbnail !== 'self'">
-                <img class="img-fluid" ng-src="{{$ctrl.post.thumbnail}}" />
-                <!--<div style="
-                    display: block;
-                    height: 100%;
-                    width: 140px;
-                    background-image: url(https://b.thumbs.redditmedia.com/sxM6tRQK0Ah-z9BlmigBm9uidjV_0Bm5c5btz0aQr9g.jpg);
-                    background-position: center;
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                " ng-style="{'background-image': 'url(' + $ctrl.post.thumbnail + ')'}"></div>-->
+                <!--<img class="img-fluid" ng-src="{{$ctrl.post.thumbnail}}" />-->
+                <div class="thumbnail" ng-style="{'background-image': 'url(' + $ctrl.post.thumbnail + ')'}"></div>
             </div>
             <div class="col flex-grow">
                 <span class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked, 'text-success' : $ctrl.post.stickied }">{{$ctrl.post.title}}</span>

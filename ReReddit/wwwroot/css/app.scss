@@ -27,8 +27,29 @@
     background: #555;
 }
 
+/*html {
+    font-size: 1rem;
+}
+
+ @media screen and (min-width: $grid-sm) {
+    html {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width:$grid-md) {
+    html {
+        font-size: 1.4rem;
+    }
+}
+
+@media screen and (min-width:$grid-lg) {
+    html {
+        font-size: 1.6rem;
+    }
+}*/
 html {
-    font-size: 0.95rem;
+    font-size: 0.875rem;
 }
 
 body {
@@ -114,27 +135,6 @@ ui-view {
     }
 }
 
-/*html {
-    font-size: 1rem;
-}
-
- @media screen and (min-width: $grid-sm) {
-    html {
-        font-size: 1.2rem;
-    }
-}
-
-@media screen and (min-width:$grid-md) {
-    html {
-        font-size: 1.4rem;
-    }
-}
-
-@media screen and (min-width:$grid-lg) {
-    html {
-        font-size: 1.6rem;
-    }
-}*/
 
 youtube-embed {
 

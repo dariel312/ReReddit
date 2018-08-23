@@ -173,3 +173,22 @@ app-subreddit-comment {
         margin: auto;
     }
 }
+
+.subreddit-listview {
+    transition: 0.2s $bezier-deceleration;
+    transform: scale(1);
+    cursor: pointer;
+
+    &:hover {
+        border: 1px solid rgba(0, 0, 0, 0.36);
+    }
+
+    .thumbnail {
+        display: block;
+        height: 100%;
+        width: 144px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+}
