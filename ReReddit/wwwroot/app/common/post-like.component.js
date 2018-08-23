@@ -3,9 +3,9 @@
  */
 const PostLikeComponent = {
     template: `
-           <div class="d-flex flex-column justify-content-center">
+           <div class="d-flex flex-column justify-content-center h-100">
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(1, $event)"><i class="material-icons">keyboard_arrow_up</i></button>
-                <span class="text-center" ng-class="{'text-danger': $ctrl.liked === -1, 'text-primary': $ctrl.liked === 1}">{{$ctrl.ups | bignumber }}</span>
+                <span class="text-center" ng-class="{'text-danger': $ctrl.liked === -1, 'text-primary': $ctrl.liked === 1}" style="margin-top: -6px; margin-bottom: -6px;">{{$ctrl.ups | bignumber }}</span>
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(-1, $event)"><i class="material-icons">keyboard_arrow_down</i></button>
             </div>
         `,

@@ -37,6 +37,18 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
   /*Fix for that ugly line border thing*/
   border: none; }
 
+.card-img-left {
+  margin-top: -16px;
+  margin-bottom: -16px;
+  margin-left: -5px;
+  border-radius: 0.25rem;
+  padding: 0; }
+  .card-img-left img {
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 0.25rem; }
+
 /*$grid-columns: 12;
 $grid-gutter-width: 30px;
 
@@ -62,7 +74,10 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
 
 .subreddit-header .header-bar {
   border-bottom: solid 1px #cacaca;
-  padding: 0.6rem 0; }
+  padding: 0.6rem 0;
+  color: var(--subreddit-key-color); }
+  .subreddit-header .header-bar i.material-icons {
+    cursor: pointer; }
 
 .subreddit-sidebar {
   width: 19rem; }

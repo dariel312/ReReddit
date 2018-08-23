@@ -1,5 +1,5 @@
-﻿const SubredditCardviewComponent = {
-    templateUrl: "/app/subreddit/subreddit-cardview.component.html",
+﻿const SubredditListviewComponent = {
+    templateUrl: "/app/subreddit/subreddit-listview.component.html",
     bindings: {
         post: '<'
     },

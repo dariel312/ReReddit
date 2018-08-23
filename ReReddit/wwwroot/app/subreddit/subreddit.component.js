@@ -8,18 +8,21 @@
         $ctrl.placeholders = [{}, {}, {}, {}, {}];
         $ctrl.about = null;
         $ctrl.rules = null;
-
+        $ctrl.view = 'card';
 
         $ctrl.next = function () {
-            console.log($ctrl.listing);
             api.getSubredditPosts($stateParams.name, { before: $ctrl.listing.after, count: $ctrl.posts.length })
-                .then(function (result)  {
+                .then(function (result) {
                     $ctrl.listing = result.data.data;
                     result.data.data.children.forEach(function (item) {
                         $ctrl.posts.push(item);
                     });
                 });
-        }
+        };
+
+        $ctrl.setView = function (type) {
+            $ctrl.view = type;
+        };
 
         $ctrl.$onInit = function () {
             //reset scroll

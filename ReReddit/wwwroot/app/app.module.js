@@ -9,6 +9,7 @@
     app.component('appSubreddit', SubredditComponent);
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
+    app.component('appSubredditListview', SubredditListviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);

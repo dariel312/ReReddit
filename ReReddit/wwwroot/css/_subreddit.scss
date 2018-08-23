@@ -20,6 +20,11 @@
     .header-bar {
         border-bottom: solid 1px #cacaca;
         padding: 0.6rem 0;
+        color: var(--subreddit-key-color);
+
+        i.material-icons {
+            cursor: pointer;
+        }
     }
 
     .header-pages {

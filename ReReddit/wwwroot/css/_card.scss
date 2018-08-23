@@ -32,3 +32,18 @@
 .card-img-top > img {
 
 }
+
+.card-img-left {
+    margin-top: -16px;
+    margin-bottom: -16px;
+    margin-left: -5px;
+    border-radius: 0.25rem;
+    padding: 0;
+
+    img {
+        display: block;
+        margin-top: auto;
+        margin-bottom: auto;
+        border-radius: 0.25rem;
+    }
+}

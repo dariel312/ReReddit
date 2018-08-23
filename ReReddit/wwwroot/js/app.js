@@ -291,9 +291,9 @@ const HtmlDecodeFilter = function () {
  */
 const PostLikeComponent = {
     template: `
-           <div class="d-flex flex-column justify-content-center">
+           <div class="d-flex flex-column justify-content-center h-100">
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(1, $event)"><i class="material-icons">keyboard_arrow_up</i></button>
-                <span class="text-center" ng-class="{'text-danger': $ctrl.liked === -1, 'text-primary': $ctrl.liked === 1}">{{$ctrl.ups | bignumber }}</span>
+                <span class="text-center" ng-class="{'text-danger': $ctrl.liked === -1, 'text-primary': $ctrl.liked === 1}" style="margin-top: -6px; margin-bottom: -6px;">{{$ctrl.ups | bignumber }}</span>
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(-1, $event)"><i class="material-icons">keyboard_arrow_down</i></button>
             </div>
         `,
@@ -464,7 +464,7 @@ const SubredditCardviewComponent = {
     bindings: {
         post: '<'
     },
-    controller: function ($sce, $filter) {
+    controller: function () {
         var $ctrl = this;
       
     }
@@ -478,6 +478,16 @@ const SubredditCommentComponent = {
     controller: function  () {
         var $ctrl = this;
 
+    }
+};
+const SubredditListviewComponent = {
+    templateUrl: "/app/subreddit/subreddit-listview.component.html",
+    bindings: {
+        post: '<'
+    },
+    controller: function () {
+        var $ctrl = this;
+      
     }
 };
 const SubredditPostComponent = {
@@ -556,18 +566,21 @@ const SubredditComponent = {
         $ctrl.placeholders = [{}, {}, {}, {}, {}];
         $ctrl.about = null;
         $ctrl.rules = null;
-
+        $ctrl.view = 'card';
 
         $ctrl.next = function () {
-            console.log($ctrl.listing);
             api.getSubredditPosts($stateParams.name, { before: $ctrl.listing.after, count: $ctrl.posts.length })
-                .then(function (result)  {
+                .then(function (result) {
                     $ctrl.listing = result.data.data;
                     result.data.data.children.forEach(function (item) {
                         $ctrl.posts.push(item);
                     });
                 });
-        }
+        };
+
+        $ctrl.setView = function (type) {
+            $ctrl.view = type;
+        };
 
         $ctrl.$onInit = function () {
             //reset scroll
@@ -608,6 +621,7 @@ const SubredditComponent = {
     app.component('appSubreddit', SubredditComponent);
     app.component('appSubredditPost', SubredditPostComponent);
     app.component('appSubredditCardview', SubredditCardviewComponent);
+    app.component('appSubredditListview', SubredditListviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appSubredditSidebar', SubredditSidebarComponent);
     app.component('appAuth', AuthComponent);

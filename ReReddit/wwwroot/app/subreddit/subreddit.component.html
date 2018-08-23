@@ -14,35 +14,19 @@
     </div>
     <div class="header-bar">
         <div class="container-fluid container-lg">
-            View: A B C
+            <span>View | </span>
+            <i class="material-icons align-middle" ng-click="$ctrl.setView('card')">view_agenda</i>
+            <i class="material-icons align-middle" ng-click="$ctrl.setView('list')">calendar_view_day</i>
+            <i class="material-icons align-middle" ng-click="$ctrl.setView('classic')">view_headline</i>
         </div>
     </div>
 </div>
 <!--Body-->
 <div class="container-fluid container-lg">
     <div class="row justify-content-end">
-        <div class="col col-md-6">
-            <!--Place Holders-->
-            <div ng-repeat="p in $ctrl.placeholders">
-                <div class="card subreddit-card-placeholder mb-3">
-                    <div class="card-img-top"></div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <div class="title mb-3"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="sub-title"></div>
-                            </div>
-                            <div class="col">
-                                <div class="sub-title"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!--Card View-->
+        <div class="col col-md-6" ng-if="$ctrl.view == 'card'">
+            <div ng-repeat="p in $ctrl.placeholders" ng-include="'/app/subreddit/subreddit-cardview.template.html'" />
             <div ng-repeat="p in $ctrl.posts">
                 <app-subreddit-cardview post="p.data" />
             </div>
@@ -50,6 +34,15 @@
             <button class="btn btn-link float-right mb-3" ng-click="$ctrl.next()">NEXT</button>
         </div>
 
+        <!--List View-->
+        <div class="col" ng-if="$ctrl.view == 'list'">
+            <div ng-repeat="p in $ctrl.placeholders" ng-include="'/app/subreddit/subreddit-listview.template.html'" />
+            <div ng-repeat="p in $ctrl.posts">
+                <app-subreddit-listview post="p.data" />
+            </div>
+
+            <button class="btn btn-link float-right mb-3" ng-click="$ctrl.next()">NEXT</button>
+        </div>
         <app-subreddit-sidebar about="$ctrl.about" rules="$ctrl.rules" class="subreddit-sidebar col-padded" />
     </div>
 
