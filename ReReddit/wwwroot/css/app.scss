@@ -28,7 +28,7 @@
 }
 
 html {
-    font-size: 0.95rem;
+    font-size: 0.855rem;
 }
 
 body {
@@ -182,5 +182,14 @@ post-media {
         @media screen and (min-width: $grid-sm) {
             max-height: calc(100vh - 6rem);
         }
+    }
+}
+
+post-like {
+    .post-like {
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        height:100%;
     }
 }

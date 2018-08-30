@@ -125,6 +125,26 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         }
     };
 
+
+    this.getMoreChildren = function (linkId, children, sort) {
+        if (sort == undefined) {
+            sort = 'best';
+        }
+
+        if (this.isLoggedIn()) {
+            return _get("api/morechildren", {
+                link_id: linkId,
+                children: children.join(),
+                sort: sort,
+                limit_children:false
+            });
+        }
+        else {
+            //return _get(host + "/subreddits/popular.json");
+            return null;
+        }
+    }
+
     //Auth
     this.redirectAuthUrl = function () {
         $window.location.href = 'https://www.reddit.com/api/v1/authorize?client_id=' + client_id + '&response_type=token&state=12345&redirect_uri=' + redirect_uri + '&scope=' + api_scope;
@@ -188,6 +208,12 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return deferred.promise;
     }
 
+};
+/*
+    API For All Reddit, includes config, constants and enumerations
+*/
+const RedditService = function (api) {
+    this.Api = api;
 };
 /*This component is used just to take in the Redirect OAuth from reddit.*/
 const AuthComponent = {
@@ -272,18 +298,25 @@ const DefaultIconComponent = {
     }
 }
 const HtmlDecodeFilter = function () {
-    return function (html, isRaw) {
+    return function (html) {
         if (html == undefined)
             return "";
 
-        if (isRaw == false) {
-            var decoded = SnuOwnd.getParser().render(html);
-            return decoded;
-        }
-        else {
-            var decoded = angular.element('<textarea />').html(html).text();
-            return decoded;
-        }
+        var decoded = angular.element('<textarea />').html(html).text();
+        return decoded;
+
+    };
+};
+/* Requires SNUOWND.js
+ *
+ */
+const MarkDownFilter = function () {
+    return function (html) {
+        if (html == undefined)
+            return "";
+
+        var decoded = SnuOwnd.getParser().render(html);
+        return decoded;
     };
 };
 /*
@@ -291,7 +324,7 @@ const HtmlDecodeFilter = function () {
  */
 const PostLikeComponent = {
     template: `
-           <div class="d-flex flex-column justify-content-center h-100">
+           <div class="post-like">
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(1, $event)"><i class="material-icons">keyboard_arrow_up</i></button>
                 <span class="text-center" ng-class="{'text-danger': $ctrl.liked === -1, 'text-primary': $ctrl.liked === 1}" style="margin-top: -6px; margin-bottom: -6px;">{{$ctrl.ups | bignumber }}</span>
                 <button class="btn btn-icon btn-link" ng-click="$ctrl.onLike(-1, $event)"><i class="material-icons">keyboard_arrow_down</i></button>
@@ -473,11 +506,28 @@ const SubredditCommentComponent = {
     templateUrl: "/app/subreddit/subreddit-comment.component.html",
     bindings: {
         comment: '<',
-        depth: '<'
+        depth: '<',
+        link: '<'
     },
-    controller: function  () {
+    controller: function (reddit) {
         var $ctrl = this;
+        $ctrl.isCollapsed = false;
 
+        $ctrl.clickMore = function (c) {
+            console.log(c);
+
+            reddit.Api.getMoreChildren($ctrl.link, c.data.children).then(
+                function (response) {
+                    console.log(response);
+                });
+        }
+
+        $ctrl.collapse = function ($event) {
+            if ($event.offsetX < 4) {
+                $event.stopPropagation();
+                $ctrl.isCollapsed = !$ctrl.isCollapsed;
+            }
+        }
     }
 };
 const SubredditListviewComponent = {
@@ -553,7 +603,10 @@ const SubredditSidebarComponent = {
     },
     controller: function () {
         var $ctrl = this;
-         
+
+        $ctrl.toggleRule = function (n) {
+            n.show = !n.show;
+        }
     }
 };
 const SubredditComponent = {
@@ -616,6 +669,7 @@ const SubredditComponent = {
 
     //Declare all angular components/services/factories/filters here
     app.service('api', ApiService);
+    app.service('reddit', RedditService);
     app.component('appNavbar', NavbarComponent);
     app.component('appHome', HomeComponent);
     app.component('appSubreddit', SubredditComponent);
@@ -631,6 +685,7 @@ const SubredditComponent = {
     app.component('youtubeEmbed', YoutubeEmbedComponent)
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
+    app.filter('markdown', MarkDownFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider, $rootScopeProvider) {

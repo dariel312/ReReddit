@@ -4,6 +4,7 @@
 
     //Declare all angular components/services/factories/filters here
     app.service('api', ApiService);
+    app.service('reddit', RedditService);
     app.component('appNavbar', NavbarComponent);
     app.component('appHome', HomeComponent);
     app.component('appSubreddit', SubredditComponent);
@@ -19,6 +20,7 @@
     app.component('youtubeEmbed', YoutubeEmbedComponent)
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
+    app.filter('markdown', MarkDownFilter);
 
     //Configure angular here
     app.config(function ($locationProvider, $urlRouterProvider, $stateProvider, $httpProvider, $rootScopeProvider) {

@@ -101,6 +101,26 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         }
     };
 
+
+    this.getMoreChildren = function (linkId, children, sort) {
+        if (sort == undefined) {
+            sort = 'best';
+        }
+
+        if (this.isLoggedIn()) {
+            return _get("api/morechildren", {
+                link_id: linkId,
+                children: children.join(),
+                sort: sort,
+                limit_children:false
+            });
+        }
+        else {
+            //return _get(host + "/subreddits/popular.json");
+            return null;
+        }
+    }
+
     //Auth
     this.redirectAuthUrl = function () {
         $window.location.href = 'https://www.reddit.com/api/v1/authorize?client_id=' + client_id + '&response_type=token&state=12345&redirect_uri=' + redirect_uri + '&scope=' + api_scope;

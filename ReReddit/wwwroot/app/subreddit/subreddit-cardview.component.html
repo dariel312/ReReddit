@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col flex-grow">
-                <span class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked, 'text-success' : $ctrl.post.stickied }">{{$ctrl.post.title}}</span>
+                <span class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked, 'text-success' : $ctrl.post.stickied }">{{$ctrl.post.title | htmldecode}}</span>
                 <br />
                 <div>
                     Posted by <a ng-href="'www.reddit.com/u/' + $ctrl.post.author" target="_blank">/u/{{$ctrl.post.author}}</a> <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>

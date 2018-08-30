@@ -1,10 +1,12 @@
-﻿<div class="subreddit-post">
+﻿<!--Modal-->
+<div class="subreddit-post">
     <div class="modal-backdrop fade show"></div>
     <div class="modal d-block">
         <div class="row justify-content-center" ui-sref="^">
-            <div class="col col-sm-10 col-md-8">
+            <div class="col col-sm-10 col-xl-8">
                 <div class="modal-content" ng-show="$ctrl.post != null" ng-click="$event.stopPropagation()">
                     <div class="modal-header">
+                        <!--Header-->
                         <div class="d-flex align-items-start">
 
                             <post-like ups="$ctrl.post.ups" name="$ctrl.post.name"/>
@@ -29,6 +31,7 @@
                             <i class="material-icons">close</i>
                         </button>
                     </div>
+                    <!--Content-->
                     <div class="modal-body">
                         <div class="row">
                             <div class="col">
@@ -40,7 +43,7 @@
                                 <post-media post="$ctrl.post" />
                             </div>
                             <div class="col" ng-if="$ctrl.post.preview == undefined">
-                                <span ng-bind-html="$ctrl.post.selftext"></span>
+                                <span ng-bind-html="$ctrl.post.selftext | markdown"></span>
                             </div>
                         </div>
                         <div class="row">
@@ -49,6 +52,8 @@
                                 <h6>{{$ctrl.post.num_comments}} Comments</h6>
                             </div>
                         </div>
+
+                        <!--Reply box-->
                         <div class="row">
                             <div class="col form-group">
                                 <textarea class="form-control"></textarea>
@@ -59,13 +64,15 @@
                                 <button class="btn btn-primary">Reply</button>
                             </div>
                         </div>
+                        <!--Spinner-->
                         <div class="row justify-content-center" ng-if="$ctrl.comments.length == 0">
                             <div class="col col-sm-3 col-md-2">
                                 <img src="/img/icon_spinner.svg" class="mx-auto d-block img-fluid" />
                             </div>
                         </div>
+                        <!--Comments-->
                         <div ng-repeat="c in $ctrl.comments" class="row">
-                            <app-subreddit-comment comment="c" depth="0" class="mt-2"></app-subreddit-comment>
+                            <app-subreddit-comment comment="c" link="$ctrl.post.name" depth="0" class="mt-2"></app-subreddit-comment>
                         </div>
                     </div>
                 </div>

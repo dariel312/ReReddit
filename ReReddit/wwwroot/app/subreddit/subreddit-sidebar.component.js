@@ -6,6 +6,9 @@
     },
     controller: function () {
         var $ctrl = this;
-         
+
+        $ctrl.toggleRule = function (n) {
+            n.show = !n.show;
+        }
     }
 };

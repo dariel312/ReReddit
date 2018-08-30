@@ -130,7 +130,7 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
   padding-top: 0; }
 
 .subreddit-post .modal-title {
-  font-weight: 300; }
+  font-weight: 400; }
 
 /*
       COMMENT
@@ -140,13 +140,13 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
 app-subreddit-comment {
   width: 100%;
   padding: 0 0.5rem;
-  display: block; }
+  display: flex;
+  flex-direction: row; }
   app-subreddit-comment .post-comment {
     border-left: 2px solid;
     border-color: #007bff;
     padding-left: 0.5rem;
     margin: 0 0 0rem 0px;
-    font-size: 0.9rem;
     color: #111111;
     width: 100%; }
     app-subreddit-comment .post-comment p {
@@ -157,6 +157,27 @@ app-subreddit-comment {
       word-wrap: break-word;
       overflow-wrap: break-word;
       word-break: break-all; }
+    app-subreddit-comment .post-comment .post-like {
+      justify-content: flex-start; }
+  app-subreddit-comment .comment-collapse-fade {
+    transition: 0.4s cubic-bezier(0.53, -0.01, 0.16, 0.99);
+    transform: scaleY(1);
+    transform-origin: top;
+    opacity: 1;
+    /*&.ng-hide-remove {
+        }
+
+        &.ng-hide-remove-active {
+        }*/ }
+    app-subreddit-comment .comment-collapse-fade.ng-hide {
+      transform: scaleY(1);
+      opacity: 1; }
+    app-subreddit-comment .comment-collapse-fade.ng-hide-add {
+      transform: scaleY(1);
+      opacity: 1; }
+    app-subreddit-comment .comment-collapse-fade.ng-hide-add-active {
+      opacity: 0;
+      transform: scaleY(0); }
   app-subreddit-comment .more-comments {
     padding: 0 0.5rem; }
 
@@ -227,7 +248,7 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
   background: #555; }
 
 html {
-  font-size: 0.95rem; }
+  font-size: 0.855rem; }
 
 body {
   font-family: "Open Sans";
@@ -346,4 +367,10 @@ post-media {
     @media screen and (min-width: 576px) {
       post-media img {
         max-height: calc(100vh - 6rem); } }
+
+post-like .post-like {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%; }
 

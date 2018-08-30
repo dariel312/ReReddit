@@ -17,6 +17,7 @@ namespace ReReddit.Middleware
                !context.Request.Path.Value.StartsWith("/api/"))
             {
                 context.Request.Path = "/";
+                context.Response.StatusCode = 200;
                 await next(context);
             }
         }

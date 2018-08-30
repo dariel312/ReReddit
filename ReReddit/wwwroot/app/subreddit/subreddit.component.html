@@ -26,7 +26,7 @@
     <div class="row justify-content-end">
         <!--Card View-->
         <div class="col col-md-6" ng-if="$ctrl.view == 'card'">
-            <div ng-repeat="p in $ctrl.placeholders" ng-include="'/app/subreddit/subreddit-cardview.template.html'" />
+            <div ng-repeat="p in $ctrl.placeholders" ng-include="'/app/subreddit/subreddit-cardview.placeholder.html'" />
             <div ng-repeat="p in $ctrl.posts">
                 <app-subreddit-cardview post="p.data" />
             </div>
@@ -36,7 +36,7 @@
 
         <!--List View-->
         <div class="col" ng-if="$ctrl.view == 'list'">
-            <div ng-repeat="p in $ctrl.placeholders" ng-include="'/app/subreddit/subreddit-listview.template.html'" />
+            <div ng-repeat="p in $ctrl.placeholders" ng-include="'/app/subreddit/subreddit-listview.placeholder.html'" />
             <div ng-repeat="p in $ctrl.posts">
                 <app-subreddit-listview post="p.data" />
             </div>

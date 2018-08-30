@@ -115,7 +115,7 @@
     }
 
     .modal-title {
-        font-weight: 300;
+        font-weight: 400;
     }
 }
 /*
@@ -126,16 +126,17 @@
 app-subreddit-comment {
     width: 100%;
     padding: 0 0.5rem;
-    display: block;
+    display: flex;
+    flex-direction: row;
 
     .post-comment {
         border-left: 2px solid;
         border-color: $color-primary;
         padding-left: 0.5rem;
         margin: 0 0 0rem 0px;
-        font-size: 0.9rem;
         color: #111111;
         width: 100%;
+
 
         p {
             margin-bottom: 0.2rem;
@@ -148,6 +149,37 @@ app-subreddit-comment {
             overflow-wrap: break-word;
             word-break: break-all;
         }
+
+        .post-like {
+            justify-content: flex-start;
+        }
+    }
+
+    .comment-collapse-fade {
+        transition: 0.4s $bezier-motion;
+        transform: scaleY(1);
+        transform-origin: top;
+        opacity: 1;
+
+        &.ng-hide {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+
+        &.ng-hide-add {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+
+        &.ng-hide-add-active {
+            opacity: 0;
+            transform: scaleY(0);
+        }
+        /*&.ng-hide-remove {
+        }
+
+        &.ng-hide-remove-active {
+        }*/
     }
 
     .more-comments {
