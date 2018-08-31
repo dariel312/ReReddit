@@ -11,7 +11,7 @@
 
         <div class="col-auto nav-item dropdown nav-subreddit-dropdown">
             <button class="btn btn-block btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">{{$ctrl.current}}</button>
-            <div class="dropdown-menu dropdown-menu-right font-small nav-subreddit-dropdown" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu dropdown-menu-right nav-subreddit-dropdown" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" ui-sref="home">FrontPage</a>
                 <a class="dropdown-item" ui-sref="subreddit({name: c.data.display_name})" ng-repeat="c in $ctrl.subreddits">{{c.data.display_name}}</a>
                 <!--<div class="dropdown-divider"></div>-->
@@ -38,7 +38,7 @@
                 <span ng-bind="$ctrl.user.name">Username</span>
                 <img class="nav-user-icon" ng-src="{{$ctrl.user.icon_img}}" />
             </button>
-            <div class="dropdown-menu dropdown-menu-right font-small" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Action</a>
                 <a class="dropdown-item" href="#">Another action</a>
                 <div class="dropdown-divider"></div>
