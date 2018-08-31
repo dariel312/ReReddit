@@ -1,10 +1,10 @@
-﻿<div class="card subreddit-cardview form-group" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
+﻿<div class="card subreddit-cardview mb-4" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
     <div class="card-img-top">
        <post-media post="$ctrl.post"/>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col flex-grow">
+            <div class="col flex-grow-1">
                 <span class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked, 'text-success' : $ctrl.post.stickied }">{{$ctrl.post.title | htmldecode}}</span>
                 <br />
                 <div>

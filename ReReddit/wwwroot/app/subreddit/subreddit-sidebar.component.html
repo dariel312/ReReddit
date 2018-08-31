@@ -46,7 +46,7 @@
 </div>
 
 
-<div class="card">
+<div class="card mb-4" ng-if="$ctrl.rules.length !== 0">
     <div class="card-header" ng-style="{'background-color': $ctrl.about.primary_color}" ng-class="{'text-white': $ctrl.about.primary_color != ''}">
         Rules
     </div>
@@ -62,5 +62,11 @@
                 </div>
                 <div ng-bind-html="n.description | markdown" ng-if="n.show" class="text-muted"></div>
             </div>
+    </div>
+</div>
+
+<div class="card footer">
+    <div class="card-body">
+        Footer
     </div>
 </div>

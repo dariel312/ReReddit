@@ -50,6 +50,11 @@
         border-color: var(--subreddit-key-color);
         color: var(--subreddit-key-color);
     }
+
+    .footer{
+        position: sticky;
+        top: $navbar-height + 1.5rem;
+    }
 }
 
 .subreddit-card-placeholder {

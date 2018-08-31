@@ -271,8 +271,8 @@ const BigNumberFilter = function () {
 const DefaultIconComponent = {
     template: `
           <svg class="s545dfq-6 fvTVVq jqg8ml-1 ghnDxa" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" 
-             style="width: 32px;
-                    height: 32px;
+             style="width: 2.34rem;
+                    height: 2.34rem;
                     margin: 0 0.5rem;
                     color: rgb(255, 255, 255);
                     fill: rgb(255, 255, 255);
