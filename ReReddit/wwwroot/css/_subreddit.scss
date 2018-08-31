@@ -59,24 +59,46 @@
 
 .subreddit-card-placeholder {
     height: 18rem;
-    $grey: #c6c6c6;
 
     .card-img-top {
         height: 13rem;
-        background-color: $grey;
+        background-color: $color-grey;
     }
 
     .title {
         height: 1rem;
         border-radius: 0.25rem;
-        background-color: $grey;
+        background-color: $color-grey;
         width: 100%;
     }
 
     .sub-title {
         height: 1rem;
         border-radius: 0.25rem;
-        background-color: $grey;
+        background-color: $color-grey;
+    }
+}
+
+.subreddit-listview-placeholder {
+
+    .title {
+        height: 2rem;
+        border-radius: 0.25rem;
+        background-color: $color-grey;
+        width: 100%;
+    }
+
+    .sub-title {
+        height: 1rem;
+        border-radius: 0.25rem;
+        background-color: $color-grey;
+    }
+
+    .thumbnail {
+        height: 100%;
+        width: 8rem;
+        background-color: $color-grey;
+        border-radius: 0.25rem;
     }
 }
 
@@ -84,6 +106,7 @@
 
     .modal-content {
         overflow-y: auto;
+        overflow-x: hidden;
         max-height: 100vh;
         display: block;
         box-shadow: $shadow-d3;
@@ -190,6 +213,14 @@ app-subreddit-comment {
     .more-comments {
         padding: 0 0.5rem;
     }
+
+    .comment-actions{
+        a{
+            font-size: 0.9rem;  
+            font-family: $font-condensed;
+            margin: 0 0.25rem;
+        }
+    }
 }
 
 .subreddit-cardview {
@@ -222,10 +253,11 @@ app-subreddit-comment {
 
     .thumbnail {
         display: block;
-        height: 100%;
-        width: 144px;
+        height: 6rem;
+        width: 8rem;
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
+        border-radius: 0.25rem; 
     }
 }

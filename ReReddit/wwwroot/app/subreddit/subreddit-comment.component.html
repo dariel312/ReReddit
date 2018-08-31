@@ -1,9 +1,9 @@
-﻿<div class="post-comment" ng-click="$ctrl.collapse($event)" >
+﻿<div class="post-comment" ng-click="$ctrl.collapse($event)">
 
     <!--Comment-->
     <div class="d-flex">
         <post-like ups="$ctrl.comment.ups" name="$ctrl.comment.name" />
-        <div class="col mb-2">
+        <div class="col mb-3">
             <span class="text-muted">
                 <span ng-class="{'badge badge-primary badge-pill' : $ctrl.comment.is_submitter}">{{$ctrl.comment.author}}</span><i ng-if="$ctrl.comment.is_submitter" class="material-icons align-middle">keyboard_voice</i>
                 <span am-time-ago="$ctrl.comment.created_utc | amFromUnix"></span>
@@ -13,13 +13,21 @@
                   ng-hide="$ctrl.isCollapsed"></span>
 
             <span class="text-muted font-weight-bold" ng-if="$ctrl.isCollapsed">Hidden - {{$ctrl.comment.replies.data.children.length}} comment(s)</span>
-            <!--<div>
-                Reply
-                Share
-                Report
-                Save
-                Give gold
-            </div>-->
+            <div class="comment-actions">
+                <a href="" ng-click="$ctrl.openReply()">Reply</a>
+                <a href="">Share</a>
+                <a href="">Report</a>
+                <a href="">Save</a>
+                <a href="">Give Gold</a>
+            </div>
+          
+            <div ng-if="$ctrl.showReply">
+                <hr />
+                <textarea class="form-control form-group">
+
+                </textarea>
+                <button class="btn btn-primary">Reply</button>
+            </div>
         </div>
     </div>
 
@@ -30,7 +38,7 @@
                                depth="$ctrl.depth + 1"
                                link="$ctrl.link"
                                ng-if="c.kind !== 'more'"
-                               class="mb-2"/>
+                               class="mb-2" />
 
         <!--More Comment-->
         <div class="more-comments" ng-repeat-end ng-if="c.kind == 'more' && c.data.count > 0">

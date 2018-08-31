@@ -8,7 +8,8 @@
                 <span class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked, 'text-success' : $ctrl.post.stickied }">{{$ctrl.post.title | htmldecode}}</span>
                 <br />
                 <div>
-                    Posted by <a ng-href="'www.reddit.com/u/' + $ctrl.post.author" target="_blank">/u/{{$ctrl.post.author}}</a> <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>
+                    Posted by <span class="text-primary">/u/{{$ctrl.post.author}}</span> <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>
+                    <!-- ng-href="'www.reddit.com/u/' + $ctrl.post.author" target="_blank" -->
                 </div>
                 <div class="text-muted card-misc-info">
 
@@ -18,7 +19,7 @@
 
                 </div>
                 <div class="card-actions">
-                    <a>Comments ({{$ctrl.post.num_comments}})</a>
+                    <span class="text-condensed text-muted">{{$ctrl.post.num_comments}} Comments</span>
                 </div>
             </div>
 

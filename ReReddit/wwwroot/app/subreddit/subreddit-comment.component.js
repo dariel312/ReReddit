@@ -8,6 +8,7 @@
     controller: function (reddit) {
         var $ctrl = this;
         $ctrl.isCollapsed = false;
+        $ctrl.showReply = false;
 
         $ctrl.clickMore = function (c) {
             console.log(c);
@@ -23,6 +24,13 @@
                 $event.stopPropagation();
                 $ctrl.isCollapsed = !$ctrl.isCollapsed;
             }
+        }
+
+        $ctrl.openReply = function () {
+            if (!reddit.Api.isLoggedIn())
+                alert("Must be logged in to do that.");
+
+            $ctrl.showReply = true;
         }
     }
 };

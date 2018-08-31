@@ -512,6 +512,7 @@ const SubredditCommentComponent = {
     controller: function (reddit) {
         var $ctrl = this;
         $ctrl.isCollapsed = false;
+        $ctrl.showReply = false;
 
         $ctrl.clickMore = function (c) {
             console.log(c);
@@ -527,6 +528,13 @@ const SubredditCommentComponent = {
                 $event.stopPropagation();
                 $ctrl.isCollapsed = !$ctrl.isCollapsed;
             }
+        }
+
+        $ctrl.openReply = function () {
+            if (!reddit.Api.isLoggedIn())
+                alert("Must be logged in to do that.");
+
+            $ctrl.showReply = true;
         }
     }
 };
@@ -611,8 +619,9 @@ const SubredditSidebarComponent = {
 };
 const SubredditComponent = {
     templateUrl: "/app/subreddit/subreddit.component.html",
-    controller: function ($stateParams, $window, api) {
+    controller: function ($stateParams, $window, reddit) {
         var $ctrl = this;
+        let SAVED_VIEW = 'saved_view';
         $ctrl.name = $stateParams.name;
         $ctrl.listing = [];
         $ctrl.posts = [];
@@ -621,8 +630,9 @@ const SubredditComponent = {
         $ctrl.rules = null;
         $ctrl.view = 'card';
 
+
         $ctrl.next = function () {
-            api.getSubredditPosts($stateParams.name, { before: $ctrl.listing.after, count: $ctrl.posts.length })
+            reddit.Api.getSubredditPosts($stateParams.name, { before: $ctrl.listing.after, count: $ctrl.posts.length })
                 .then(function (result) {
                     $ctrl.listing = result.data.data;
                     result.data.data.children.forEach(function (item) {
@@ -633,6 +643,7 @@ const SubredditComponent = {
 
         $ctrl.setView = function (type) {
             $ctrl.view = type;
+            $window.localStorage.setItem(SAVED_VIEW, type);
         };
 
         $ctrl.$onInit = function () {
@@ -640,13 +651,13 @@ const SubredditComponent = {
             angular.element(window).scrollTop(0);
 
             //download data
-            api.getSubredditPosts($stateParams.name).then(function (result) {
+            reddit.Api.getSubredditPosts($stateParams.name).then(function (result) {
                 $ctrl.listing = result.data.data;
                 $ctrl.posts = result.data.data.children;
                 $ctrl.placeholders = [];
             });
 
-            api.getSubredditAbout($stateParams.name).then(function (result) {
+            reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
                 $ctrl.about = result.data.data;
 
                 var html = document.getElementsByTagName('html')[0];
@@ -656,10 +667,15 @@ const SubredditComponent = {
                 $window.document.title = "Re: " + $ctrl.about.title;
             });
 
-            api.getSubredditRules($stateParams.name).then(function (result) {
+            reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
                 $ctrl.rules = result.data.rules;
             });
 
+
+            //Check storage for saved view
+            var view = $window.localStorage.getItem(SAVED_VIEW);
+            if (view != null && view != undefined)
+                $ctrl.view = view;
         };
     }
 };
