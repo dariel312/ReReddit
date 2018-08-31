@@ -146,7 +146,7 @@ app-subreddit-comment {
   display: flex;
   flex-direction: row; }
   app-subreddit-comment .post-comment {
-    border-left: 2px solid;
+    border-left: 0.25rem solid;
     border-color: #007bff;
     padding-left: 0.5rem;
     margin: 0 0 0rem 0px;
