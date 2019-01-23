@@ -11,7 +11,6 @@
         $ctrl.rules = null;
         $ctrl.view = 'card';
 
-
         $ctrl.next = function () {
             reddit.Api.getSubredditPosts($stateParams.name, { before: $ctrl.listing.after, count: $ctrl.posts.length })
                 .then(function (result) {
@@ -38,24 +37,29 @@
                 $ctrl.placeholders = [];
             });
 
-            reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
-                $ctrl.about = result.data.data;
+            //only get side bar stuff if were not on front page
+            if ($stateParams.name !== null) {
 
-                var html = document.getElementsByTagName('html')[0];
-                html.style.setProperty("--subreddit-primary-color", $ctrl.about.primary_color);
-                html.style.setProperty("--subreddit-key-color", $ctrl.about.key_color);
+                reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
 
-                $window.document.title = "Re: " + $ctrl.about.title;
-            });
+                    $ctrl.about = result.data.data;
 
-            reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
-                $ctrl.rules = result.data.rules;
-            });
+                    var html = document.getElementsByTagName('html')[0];
+                    html.style.setProperty("--subreddit-primary-color", $ctrl.about.primary_color);
+                    html.style.setProperty("--subreddit-key-color", $ctrl.about.key_color);
+
+                    $window.document.title = "Re: " + $ctrl.about.title;
+                });
+
+                reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
+                    $ctrl.rules = result.data.rules;
+                });
+            }
 
 
             //Check storage for saved view
             var view = $window.localStorage.getItem(SAVED_VIEW);
-            if (view != null && view != undefined)
+            if (view !== null && view !== undefined)
                 $ctrl.view = view;
         };
     }

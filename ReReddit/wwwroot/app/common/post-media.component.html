@@ -1,8 +1,9 @@
-﻿<img ng-src="{{$ctrl.post.preview.images[0].source.url}}" class="mx-auto" 
+﻿<img ng-src="{{$ctrl.post.url}}" class="mx-auto" 
      ng-if="$ctrl.post.preview.images.length > 0  
             && $ctrl.post.preview.reddit_video_preview  == null 
             && $ctrl.post.media.type != 'youtube.com'
-            && $ctrl.post.media.reddit_video == null" />
+            && $ctrl.post.media.reddit_video == null
+            && $ctrl.post.preview.enabled" />
 
 <!--For Gifs-->
 <video controls loop preload="none" muted

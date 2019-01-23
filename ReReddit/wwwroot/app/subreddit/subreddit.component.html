@@ -1,6 +1,6 @@
 ﻿<!--Header-->
 <div class="content-main subreddit-header mb-4">
-    <div class="header-title">
+    <div class="header-title" ng-if="$ctrl.name != null">
         <div class="container-fluid container-lg pt-3 pb-2">
             <h3>
                 <img class="img-circle subreddit-icon" ng-src="{{$ctrl.about.icon_img}}" ng-if="$ctrl.about.icon_img != ''" />
@@ -43,7 +43,8 @@
 
             <button class="btn btn-link float-right mb-3" ng-click="$ctrl.next()">NEXT</button>
         </div>
-        <app-subreddit-sidebar about="$ctrl.about" rules="$ctrl.rules" class="subreddit-sidebar col-padded" />
+        <app-subreddit-sidebar about="$ctrl.about" rules="$ctrl.rules" class="subreddit-sidebar col-padded"
+                               ng-style="{'visibility' : ($ctrl.name == null? 'hidden': 'visible')}" />
     </div>
 
     <ui-view />

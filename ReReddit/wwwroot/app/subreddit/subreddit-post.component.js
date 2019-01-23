@@ -8,8 +8,8 @@
 
         let html = angular.element('html');
         let onEscHandler = function (e) {
-            if (e.keyCode == 27) {
-                $state.go('^')
+            if (e.keyCode === 27) {
+                $state.go('^');
             }
         };
 
@@ -18,17 +18,16 @@
             angular.element(document).keyup(onEscHandler);
 
 
-            if ($stateParams.subreddit == null)
+            if ($stateParams.subreddit === null)
                 $ctrl.name = $stateParams.name;
 
-            if ($ctrl.name == null)
+            if ($ctrl.name === null)
                 $state.go('^');
 
 
             api.getPost($ctrl.name, $stateParams.id).then(function (result) {
 
-                if ($ctrl.post == null)
-                    $ctrl.post = result.data[0].data.children[0].data;
+                $ctrl.post = result.data[0].data.children[0].data;
 
                 var cmts = [];
                 result.data.splice(0, 1);

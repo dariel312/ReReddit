@@ -20,7 +20,7 @@
 
         $ctrl.clickMore = function (c) {
             console.log(c);
-
+           
             reddit.Api.getMoreChildren($ctrl.link, c.data.children).then(
                 function (response) {
                     console.log(response);

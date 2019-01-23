@@ -9,8 +9,8 @@
                         <!--Header-->
                         <div class="d-flex align-items-start">
 
-                            <post-like ups="$ctrl.post.ups" name="$ctrl.post.name"/>
-                            
+                            <post-like ups="$ctrl.post.ups" name="$ctrl.post.name" />
+
                             <div class="flex-grow-1 col">
                                 <h5 class="modal-title">{{$ctrl.post.title}}</h5>
                                 <div class="text-muted mb-2">
@@ -38,12 +38,24 @@
                                 <small class="float-right">{{$ctrl.post.upvote_ratio * 100}}% Upvoted</small>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col" ng-if="$ctrl.post.preview != undefined">
+                        <div class="row" ng-if="$ctrl.post.preview != undefined">
+                            <div class="col">
                                 <post-media post="$ctrl.post" />
                             </div>
-                            <div class="col" ng-if="$ctrl.post.preview == undefined">
+                        </div>
+                        <div class="row" ng-if="$ctrl.post.post_hint == 'self'">
+                            <div class="col">
                                 <span ng-bind-html="$ctrl.post.selftext | markdown"></span>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="$ctrl.post.post_hint == 'link'">
+                            <div class="col">
+                                <a ng-href="{{$ctrl.post.url}}" target="_blank">
+                                    {{$ctrl.post.title}}
+                                    <i class="material-icons align-middle">
+                                        launch
+                                    </i>
+                                </a>
                             </div>
                         </div>
                         <div class="row">

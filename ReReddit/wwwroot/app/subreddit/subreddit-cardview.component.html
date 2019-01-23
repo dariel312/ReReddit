@@ -1,6 +1,6 @@
 ﻿<div class="card subreddit-cardview mb-4" ui-sref=".post({subreddit: $ctrl.post.subreddit, id:$ctrl.post.id, post: $ctrl.post})">
     <div class="card-img-top">
-       <post-media post="$ctrl.post"/>
+        <post-media post="$ctrl.post" />
     </div>
     <div class="card-body">
         <div class="row">
@@ -16,10 +16,18 @@
                     <span>{{$ctrl.post.domain}}</span>
                     <span>/r/{{$ctrl.post.subreddit}}</span>
                     <span ng-if="$ctrl.post.stickied">Stickied</span>
-
+                    <span>{{$ctrl.post.post_hint}}</span>
                 </div>
                 <div class="card-actions">
                     <span class="text-condensed text-muted">{{$ctrl.post.num_comments}} Comments</span>
+                    <!--<span class="text-condensed text-muted">
+                        <a ng-href="{{$ctrl.post.url}}" target="_blank">
+                            <i class="material-icons align-middle">
+                                launch
+                            </i>
+                            View
+                        </a>
+                    </span>-->
                 </div>
             </div>
 
