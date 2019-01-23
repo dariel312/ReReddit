@@ -135,7 +135,8 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
   opacity: 1;
   transition: 0.1s cubic-bezier(0.4, 0, 1, 1);
   transform: translateY(0);
-  border-radius: 0; }
+  border-radius: 0;
+  will-change: transform; }
   .subreddit-post .modal-content.ng-hide {
     opacity: 0;
     transform: translateY(-50%); }
@@ -170,17 +171,17 @@ app-subreddit-comment {
     width: 100%; }
     app-subreddit-comment .post-comment p {
       margin-bottom: 0.2rem;
-      word-wrap: break-word;
-      overflow-wrap: break-word; }
+      /*word-wrap: break-word;
+            overflow-wrap: break-word;*/ }
     app-subreddit-comment .post-comment a, app-subreddit-comment .post-comment span {
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      word-break: break-all; }
+      /*word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-all;*/ }
     app-subreddit-comment .post-comment .post-like {
       justify-content: flex-start; }
   app-subreddit-comment .comment-collapse-fade {
     transition: 0.4s cubic-bezier(0.53, -0.01, 0.16, 0.99);
-    transform: scaleY(1);
+    /*transform: scaleY(1);*/
     transform-origin: top;
     opacity: 1;
     /*&.ng-hide-remove {
@@ -248,6 +249,7 @@ $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px );*/
   color: white;
   box-shadow: none;
   padding: 0.5rem 0rem;
+  will-change: transform;
   /*height: $navbar-height;*/ }
   .navbar .nav-subreddit-dropdown {
     /*max-height: 30rem;
@@ -411,4 +413,3 @@ post-like .post-like {
   flex-direction: column;
   justify-content: center;
   height: 100%; }
-

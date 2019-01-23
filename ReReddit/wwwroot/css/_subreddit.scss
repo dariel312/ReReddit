@@ -114,6 +114,7 @@
         transition: 0.10s $bezier-aceleration;
         transform: translateY(0);
         border-radius: 0;
+        will-change: transform;
 
         &.ng-hide {
             opacity: 0;
@@ -168,14 +169,14 @@ app-subreddit-comment {
 
         p {
             margin-bottom: 0.2rem;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            /*word-wrap: break-word;
+            overflow-wrap: break-word;*/
         }
 
         a, span {
-            word-wrap: break-word;
+            /*word-wrap: break-word;
             overflow-wrap: break-word;
-            word-break: break-all;
+            word-break: break-all;*/
         }
 
         .post-like {
@@ -185,7 +186,7 @@ app-subreddit-comment {
 
     .comment-collapse-fade {
         transition: 0.4s $bezier-motion;
-        transform: scaleY(1);
+        /*transform: scaleY(1);*/
         transform-origin: top;
         opacity: 1;
 
