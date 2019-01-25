@@ -16,8 +16,9 @@
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.component('postMedia', PostMediaComponent);
+    app.component('postThumbnail', PostThumbnailComponent);
     app.component('defaultIcon', DefaultIconComponent);
-    app.component('youtubeEmbed', YoutubeEmbedComponent)
+    app.component('youtubeEmbed', YoutubeEmbedComponent);
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
     app.filter('markdown', MarkDownFilter);

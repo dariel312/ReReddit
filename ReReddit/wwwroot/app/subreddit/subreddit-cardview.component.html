@@ -16,7 +16,7 @@
                     <span>{{$ctrl.post.domain}}</span>
                     <span>/r/{{$ctrl.post.subreddit}}</span>
                     <span ng-if="$ctrl.post.stickied">Stickied</span>
-                    <span>{{$ctrl.post.post_hint}}</span>
+                    <span ng-if="$ctrl.post.post_hint !== undefined">{{$ctrl.post.post_hint}}</span>
                 </div>
                 <div class="card-actions">
                     <span class="text-condensed text-muted">{{$ctrl.post.num_comments}} Comments</span>

@@ -2,22 +2,29 @@
 
     <div class="card-body">
         <div class="row">
-            <div class="card-img-left d-flex align-items-center" ng-if="$ctrl.post.thumbnail !== 'self' && $ctrl.post.thumbnail != '' && $ctrl.post.thumbnail != 'default'">
-                <div class="thumbnail" ng-style="{'background-image': 'url(' + $ctrl.post.thumbnail + ')'}"></div>
+            <div class="card-img-left d-flex align-items-center">
+                <post-thumbnail post="$ctrl.post" />
             </div>
             <div class="col flex-grow">
+                <!--Title-->
                 <span class="card-post-title" ng-class="{'text-muted': $ctrl.post.clicked, 'text-success' : $ctrl.post.stickied }">{{$ctrl.post.title | htmldecode}}</span>
                 <br />
                 <div>
-                    Posted by <span class="text-primary">/u/{{$ctrl.post.author}}</span>     <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>
+                    Posted by 
+                    <span class="text-primary">/u/{{$ctrl.post.author}}</span>
+                    <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>
                 </div>
+                <!--Misc Info-->
                 <div class="text-muted card-misc-info">
 
                     <span>{{$ctrl.post.domain}}</span>
                     <span>/r/{{$ctrl.post.subreddit}}</span>
                     <span ng-if="$ctrl.post.stickied">Stickied</span>
+                    <span ng-if="$ctrl.post.post_hint !== undefined">{{$ctrl.post.post_hint}}</span>
 
                 </div>
+
+                <!--Actions-->
                 <div class="card-actions">
                     <span class="text-condensed text-muted">{{$ctrl.post.num_comments}} Comments</span>
                 </div>

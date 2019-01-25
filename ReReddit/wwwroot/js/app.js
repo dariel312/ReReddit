@@ -126,24 +126,30 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     };
 
 
-    this.getMoreChildren = function (linkId, children, sort) {
-        if (sort == undefined) {
+    this.getMoreChildren = function (link_name, link_id, children, sort) {
+        if (sort === undefined) {
             sort = 'best';
         }
 
+        //authenticated
         if (this.isLoggedIn()) {
             return _get("api/morechildren", {
-                link_id: linkId,
+                link: link_name,
                 children: children.join(),
                 sort: sort,
-                limit_children:false
+                limit_children: false
             });
         }
         else {
-            //return _get(host + "/subreddits/popular.json");
-            return null;
+            //unauthenticated
+            return _get(host + "/comments/" + link_id + "/api/morechildren.json", {
+                link: link_name,
+                children: children.join(),
+                sort: sort,
+                limit_children: false
+            });
         }
-    }
+    };
 
     //Auth
     this.redirectAuthUrl = function () {
@@ -398,6 +404,21 @@ const PostMediaComponent = {
 }
 
 /*
+ * Component to handle media posts
+ */
+const PostThumbnailComponent = {
+    templateUrl: "/app/common/post-thumbnail.component.html",
+    bindings: {
+        post: "<"
+    },
+    controller: function () {
+        var $ctrl = this;
+       
+    }
+
+}
+
+/*
  * Small component that handles Upvotes\Downvotes on a thing
  */
 const YoutubeEmbedComponent = {
@@ -505,9 +526,9 @@ const SubredditCardviewComponent = {
 const SubredditCommentComponent = {
     templateUrl: "/app/subreddit/subreddit-comment.component.html",
     bindings: {
-        comment: '<',
-        depth: '<',
-        link: '<'
+        comment: '<', //me comment
+        link: '<', //parent post
+        depth: '<' //counter
     },
     controller: function (reddit, $element, $timeout) {
         var $ctrl = this;
@@ -517,15 +538,12 @@ const SubredditCommentComponent = {
         let child = null;
 
         $ctrl.$onInit = function () {
-
             child = $element.find('div.comment-collapse-fade');
         };
 
 
         $ctrl.clickMore = function (c) {
-            console.log(c);
-           
-            reddit.Api.getMoreChildren($ctrl.link, c.data.children).then(
+            reddit.Api.getMoreChildren($ctrl.comment.name, $ctrl.comment.id, c.data.children).then(
                 function (response) {
                     console.log(response);
                 });
@@ -553,11 +571,20 @@ const SubredditCommentComponent = {
         };
 
         $ctrl.openReply = function () {
-            if (!reddit.Api.isLoggedIn())
+            if (!reddit.Api.isLoggedIn()) {
                 alert("Must be logged in to do that.");
+                return;
+            }
 
             $ctrl.showReply = true;
         };
+
+        $ctrl.authorClass = function () {
+            return {
+                'badge badge-primary badge-pill': $ctrl.comment.is_submitter,
+                'text-success': $ctrl.comment.distinguished == 'moderator'
+            };
+        }
     }
 };
 const SubredditListviewComponent = {
@@ -722,8 +749,9 @@ const SubredditComponent = {
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.component('postMedia', PostMediaComponent);
+    app.component('postThumbnail', PostThumbnailComponent);
     app.component('defaultIcon', DefaultIconComponent);
-    app.component('youtubeEmbed', YoutubeEmbedComponent)
+    app.component('youtubeEmbed', YoutubeEmbedComponent);
     app.filter('bignumber', BigNumberFilter);
     app.filter('htmldecode', HtmlDecodeFilter);
     app.filter('markdown', MarkDownFilter);

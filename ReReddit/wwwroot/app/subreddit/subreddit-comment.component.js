@@ -1,9 +1,9 @@
 ﻿const SubredditCommentComponent = {
     templateUrl: "/app/subreddit/subreddit-comment.component.html",
     bindings: {
-        comment: '<',
-        depth: '<',
-        link: '<'
+        comment: '<', //me comment
+        link: '<', //parent post
+        depth: '<' //counter
     },
     controller: function (reddit, $element, $timeout) {
         var $ctrl = this;
@@ -13,15 +13,12 @@
         let child = null;
 
         $ctrl.$onInit = function () {
-
             child = $element.find('div.comment-collapse-fade');
         };
 
 
         $ctrl.clickMore = function (c) {
-            console.log(c);
-           
-            reddit.Api.getMoreChildren($ctrl.link, c.data.children).then(
+            reddit.Api.getMoreChildren($ctrl.comment.name, $ctrl.comment.id, c.data.children).then(
                 function (response) {
                     console.log(response);
                 });
@@ -49,10 +46,19 @@
         };
 
         $ctrl.openReply = function () {
-            if (!reddit.Api.isLoggedIn())
+            if (!reddit.Api.isLoggedIn()) {
                 alert("Must be logged in to do that.");
+                return;
+            }
 
             $ctrl.showReply = true;
         };
+
+        $ctrl.authorClass = function () {
+            return {
+                'badge badge-primary badge-pill': $ctrl.comment.is_submitter,
+                'text-success': $ctrl.comment.distinguished == 'moderator'
+            };
+        }
     }
 };

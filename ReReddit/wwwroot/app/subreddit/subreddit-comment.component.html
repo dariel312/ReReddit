@@ -5,7 +5,9 @@
         <post-like ups="$ctrl.comment.ups" name="$ctrl.comment.name" />
         <div class="col mb-3">
             <span class="text-muted">
-                <span ng-class="{'badge badge-primary badge-pill' : $ctrl.comment.is_submitter}">{{$ctrl.comment.author}}</span><i ng-if="$ctrl.comment.is_submitter" class="material-icons align-middle">keyboard_voice</i>
+                <span ng-class="$ctrl.authorClass()">{{$ctrl.comment.author}}</span>
+                <i ng-if="$ctrl.comment.distinguished == 'moderator'" class="material-icons align-middle text-success">security</i>
+                <i ng-if="$ctrl.comment.is_submitter" class="material-icons align-middle">keyboard_voice</i>
                 <span am-time-ago="$ctrl.comment.created_utc | amFromUnix"></span>
             </span>
             <br />
@@ -20,7 +22,7 @@
                 <a href="">Save</a>
                 <a href="">Give Gold</a>
             </div>
-          
+
             <div ng-if="$ctrl.showReply">
                 <hr />
                 <textarea class="form-control form-group">
@@ -31,6 +33,7 @@
         </div>
     </div>
 
+    <!--Recursive comments-->
     <div class="comment-collapse-fade" ng-hide="$ctrl.isCollapsed">
         <!--Children-->
         <app-subreddit-comment ng-repeat-start="c in $ctrl.comment.replies.data.children"

@@ -102,24 +102,30 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     };
 
 
-    this.getMoreChildren = function (linkId, children, sort) {
-        if (sort == undefined) {
+    this.getMoreChildren = function (link_name, link_id, children, sort) {
+        if (sort === undefined) {
             sort = 'best';
         }
 
+        //authenticated
         if (this.isLoggedIn()) {
             return _get("api/morechildren", {
-                link_id: linkId,
+                link: link_name,
                 children: children.join(),
                 sort: sort,
-                limit_children:false
+                limit_children: false
             });
         }
         else {
-            //return _get(host + "/subreddits/popular.json");
-            return null;
+            //unauthenticated
+            return _get(host + "/comments/" + link_id + "/api/morechildren.json", {
+                link: link_name,
+                children: children.join(),
+                sort: sort,
+                limit_children: false
+            });
         }
-    }
+    };
 
     //Auth
     this.redirectAuthUrl = function () {
