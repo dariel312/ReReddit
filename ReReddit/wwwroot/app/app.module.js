@@ -5,6 +5,7 @@
     //Declare all angular components/services/factories/filters here
     app.service('api', ApiService);
     app.service('reddit', RedditService);
+    app.service('iScroll', InfiniteScrollService);
     app.component('appNavbar', NavbarComponent);
     app.component('appHome', HomeComponent);
     app.component('appSubreddit', SubredditComponent);
@@ -13,6 +14,7 @@
     app.component('appSubredditListview', SubredditListviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appSubredditSidebar', SubredditSidebarComponent);
+    app.component('appProfile', ProfileComponent);
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.component('postMedia', PostMediaComponent);
@@ -66,7 +68,13 @@
                 url: "/auth",
                 component: 'appAuth'
             })
-
+            .state("profile", {
+                url: "/u/{name}",
+                component: 'appProfile',
+                params: {
+                    name: null
+                }
+            });
 
         //For api auth
         $httpProvider.interceptors.push(ApiInterceptor);

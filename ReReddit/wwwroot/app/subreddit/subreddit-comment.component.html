@@ -14,6 +14,7 @@
             <span ng-bind-html="$ctrl.comment.body | markdown"
                   ng-hide="$ctrl.isCollapsed"></span>
 
+            <!--Actions-->
             <span class="text-muted font-weight-bold" ng-if="$ctrl.isCollapsed">Hidden - {{$ctrl.comment.replies.data.children.length}} comment(s)</span>
             <div class="comment-actions">
                 <a href="" ng-click="$ctrl.openReply()">Reply</a>
@@ -23,6 +24,7 @@
                 <a href="">Give Gold</a>
             </div>
 
+            <!--Reply Box - TODO: Make component-->
             <div ng-if="$ctrl.showReply">
                 <hr />
                 <textarea class="form-control form-group">
@@ -47,7 +49,7 @@
         <div class="more-comments" ng-repeat-end ng-if="c.kind == 'more' && c.data.count > 0">
             <div class="post-comment">
                 <button class="btn btn-link" ng-click="$ctrl.clickMore(c)">More Comments ({{c.data.count}})</button>
-                <!--TODO HOW TO OPEN MORE COMMENTS-->
+                <!--TODO: HOW TO OPEN MORE COMMENTS-->
             </div>
         </div>
     </div>

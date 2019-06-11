@@ -1,16 +1,16 @@
 ﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top">
     <a class="navbar-brand col-padded" ui-sref="home">Re:Reddit</a>
     <div class="">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <div class="collapse navbar-collapse" id="navbar">
 
         <div class="col-auto nav-item dropdown nav-subreddit-dropdown">
-            <button class="btn btn-block btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">{{$ctrl.current}}</button>
+            <button class="btn btn-block btn-light dropdown-toggle" data-toggle="dropdown">{{$ctrl.current}}</button>
             <div class="dropdown-menu dropdown-menu-right nav-subreddit-dropdown" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" ui-sref="home">FrontPage</a>
                 <a class="dropdown-item" ui-sref="subreddit({name: c.data.display_name})" ng-repeat="c in $ctrl.subreddits">{{c.data.display_name}}</a>
@@ -34,12 +34,12 @@
             <button class="btn" type="submit" ng-click="$ctrl.onLogin()" ng-if="!$ctrl.logged_in">Login</button>
         </div>
         <div ng-if="$ctrl.logged_in" class="nav-item dropdown col-padded">
-            <button class="btn btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+            <button class="btn btn-light dropdown-toggle" role="button" data-toggle="dropdown">
                 <span ng-bind="$ctrl.user.name">Username</span>
                 <img class="nav-user-icon" ng-src="{{$ctrl.user.icon_img}}" />
             </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" ui-sref="profile({name: $ctrl.user.name})">My Profile</a>
                 <a class="dropdown-item" href="#">Another action</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" ng-click="$ctrl.onLogout()">Log Off</a>

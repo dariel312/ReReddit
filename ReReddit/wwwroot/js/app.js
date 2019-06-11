@@ -23,9 +23,9 @@ var ApiInterceptor = function ($q, $window, $injector) {
     };
 }
 /*
-    Service that will be a wrapper for all api calls
+ *  Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state, $q, $timeout) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $sce, $state, $q, $timeout) {
     const self = this;
     const host = "https://www.reddit.com";
     let client_id = "t1woxVATacs9Wg";
@@ -35,6 +35,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     const token_key = "auth_token";
     var auth_info = null;
     var identity = null;
+    
 
     if (ENVIRONMENT == "PROD") {
         client_id = "TDmT_7LQ_5LkmQ";
@@ -51,9 +52,16 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
             parameters = {};
 
         return $http.get(url, { params: parameters });
-        // .finally(finFunc)
-        // .catch(errorFunc);
     };
+
+    function _getP(url, parameters) {
+        if (parameters === null || parameters === undefined)
+            parameters = {};
+
+        parameters.jsonpCallbackParam = 'callback';
+
+        return $http.jsonp(url, parameters);
+    }
 
     function _post(url, data) {
         if (data === null || data === undefined)
@@ -78,19 +86,21 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _get(host + "/r/" + subreddit + "/comments/" + id + ".json");
     };
 
-    this.getSubredditPosts = function (subreddit, params) {
-
+    this.getSubredditPosts = function (subreddit, params, sort) {
+        if (sort === undefined || sort === null) {
+            sort = 'hot'; //default for subreddit
+        }
         if (this.isLoggedIn()) {
-            if (subreddit == null)
-                return _get("api/hot", params);
+            if (subreddit === null)
+                return _get("api/" + sort, params);
             else
-                return _get("api/r/" + subreddit, params);
+                return _get("api/r/" + subreddit + "/" + sort, params);
         }
         else {
-            if (subreddit == null)
-                return _get(host + "/.json", params);
+            if (subreddit === null)
+                return _get(host + "/" + sort + "/.json", params);
             else
-                return _get(host + "/r/" + subreddit + ".json", params);
+                return _get(host + "/r/" + subreddit + "/" + sort + ".json", params);
         }
     };
 
@@ -114,7 +124,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         else {
             return _get(host + "/r/" + subreddit + "/about/rules.json");
         }
-    }
+    };
 
     this.getSubreddits = function () {
         if (this.isLoggedIn()) {
@@ -150,6 +160,15 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
             });
         }
     };
+
+    //users
+    this.getUser = function (name) {
+        //JSONP req requires this
+        var urlPath = host + "/u/" + name + "/about.json?jsonp=callback";
+        var tUrl = $sce.trustAsResourceUrl(urlPath);
+
+        return _getP(tUrl);
+    }
 
     //Auth
     this.redirectAuthUrl = function () {
@@ -219,7 +238,15 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     API For All Reddit, includes config, constants and enumerations
 */
 const RedditService = function (api) {
+    this.PAGE_TITLE = "Re:Reddit";
     this.Api = api;
+
+    this.SORT_SUBREDDIT = [
+        'hot', 'new', 'top', 'controversial', 'rising'
+    ];
+    this.SORT_FRONTPAGE = [
+        'best', 'hot', 'new', 'top', 'controversial', 'rising'
+    ];
 };
 /*This component is used just to take in the Redirect OAuth from reddit.*/
 const AuthComponent = {
@@ -312,6 +339,38 @@ const HtmlDecodeFilter = function () {
         return decoded;
 
     };
+};
+/*
+   Scroll Service to register handler for when it the page should load more posts
+   */
+const InfiniteScrollService = function () {
+    let jWindow = angular.element(window);
+    let loadHeight = 300;
+    let handlers = [];
+
+    //set scroll handler to load more
+    scrollHandler = jWindow.scroll(onScroll);
+
+    this.bind = function (callback) {
+
+        handlers.push(callback);
+    };
+
+    this.unbind = function (callback) {
+        handlers = handlers.filter(m => m !== callback);
+    };
+
+    function onScroll() {
+        var end = $(document).height();
+        var viewEnd = jWindow.scrollTop() + jWindow.height();
+        var distance = end - viewEnd;
+
+        //this handler can be called many times in a row - need to be careful not to take an action too many times
+        if (distance < loadHeight) // do load
+        {
+            handlers.forEach(m => m());
+        }
+    }
 };
 /* Requires SNUOWND.js
  *
@@ -462,7 +521,7 @@ const HomeComponent = {
 };
 const NavbarComponent = {
     templateUrl: "/app/navbar/navbar.component.html",
-    controller: function ($rootScope, $state, $transitions, api) {
+    controller: function ($rootScope, $window, $state, $transitions, api) {
         var $ctrl = this;
         $ctrl.logged_in = api.isLoggedIn();
         $ctrl.subreddits = [];
@@ -503,6 +562,7 @@ const NavbarComponent = {
 
         $ctrl.onLogout = function () {
             api.logOff();
+            $window.location.reload();
         };
 
         $ctrl.submit = function () {
@@ -511,6 +571,139 @@ const NavbarComponent = {
         }
 
        
+    }
+};
+const ProfileComponent = {
+    templateUrl: "/app/profile/profile.component.html",
+    controller: function ($stateParams, $window, iScroll, reddit) {
+        const SAVED_VIEW = 'saved_view';
+        let $ctrl = this;
+        let isFrontPage = true;
+        $ctrl.loadingMore = false;
+        $ctrl.name = $stateParams.name;
+        $ctrl.listing = [];
+        $ctrl.posts = []; //array of post listing 
+        $ctrl.placeholders = [{}, {}, {}, {}, {}];
+        $ctrl.about = null;
+        $ctrl.rules = null;
+        $ctrl.view = 'card';
+        $ctrl.sort = null;
+        $ctrl.sorts = [];
+        $ctrl.user = null;
+
+        $ctrl.$onInit = function () {
+            reddit.Api.getUser($stateParams.name).then(function (response) {
+                $ctrl.user = response.data.data;
+            });
+
+            //set scroll handler to load more
+            iScroll.bind(loadMore);
+
+            //reset title
+            $window.document.title = reddit.PAGE_TITLE;
+
+            //check if front page
+            isFrontPage = $stateParams.name !== null;
+
+            //scroll to top
+            scrollTop();
+
+            //set sorting
+            $ctrl.sorts = isFrontPage ? reddit.SORT_FRONTPAGE : reddit.SORT_SUBREDDIT;
+            $ctrl.sort = $ctrl.sorts[0];
+
+            //download data
+            loadPosts();
+
+            //get side bar stuff if were not on front page
+            //if (isFrontPage) {
+
+            //    reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
+            //        $ctrl.about = result.data.data;
+            //        setSubredditStyles();
+            //    });
+
+            //    reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
+            //        $ctrl.rules = result.data.rules;
+            //    });
+            //}
+
+            //Check storage for saved view
+            var view = $window.localStorage.getItem(SAVED_VIEW);
+            if (view !== null && view !== undefined)
+                $ctrl.view = view;
+
+
+
+           
+        };
+
+        $ctrl.$onDestroy = function () {
+            jWindow.unbind('scroll', onScroll);
+        };
+
+        $ctrl.setView = function (type) {
+            //changes view type
+            $ctrl.view = type;
+            $window.localStorage.setItem(SAVED_VIEW, type);
+        };
+
+        $ctrl.setSort = function (sort) {
+            $ctrl.sort = sort;
+
+            loadPosts();
+        };
+
+
+        function loadPosts() {
+            //reset posts
+            $ctrl.posts = [];
+            $ctrl.placeholders = [{}, {}, {}, {}, {}];
+            $ctrl.loadingMore = true;
+            reddit.Api.getSubredditPosts($stateParams.name, {}, $ctrl.sort).then(function (result) {
+                $ctrl.listing = result.data.data;
+                $ctrl.posts = result.data.data.children;
+
+                $ctrl.placeholders = [];
+                $ctrl.loadingMore = false;
+                scrollTop();
+            });
+        }
+
+        function loadMore() {
+          
+
+            $ctrl.loadingMore = true;
+
+            //pull next
+            reddit.Api.getSubredditPosts($stateParams.name, {
+                after: $ctrl.listing.after, count: $ctrl.posts.length
+            },
+                $ctrl.sort).then(function (result) {
+                    $ctrl.listing = result.data.data;
+                    result.data.data.children.forEach(function (item) {
+                        $ctrl.posts.push(item);
+                    });
+
+                    $ctrl.loadingMore = false;
+                });
+        }
+
+        function setSubredditStyles() {
+            //set color styles for subreddit
+            var html = document.getElementsByTagName('html')[0];
+            html.style.setProperty("--subreddit-primary-color", $ctrl.about.primary_color);
+            html.style.setProperty("--subreddit-key-color", $ctrl.about.key_color);
+
+            //set page title - Maybe need a title service?
+            $window.document.title = "Re: " + $ctrl.about.title;
+        }
+
+
+        function scrollTop() {
+            //scrolls window to the top
+            angular.element(window).scrollTop(0);
+        }
     }
 };
 const SubredditCardviewComponent = {
@@ -667,55 +860,48 @@ const SubredditSidebarComponent = {
 };
 const SubredditComponent = {
     templateUrl: "/app/subreddit/subreddit.component.html",
-    controller: function ($stateParams, $window, reddit) {
-        var $ctrl = this;
-        let SAVED_VIEW = 'saved_view';
+    controller: function ($stateParams, $window, iScroll, reddit) {
+        const SAVED_VIEW = 'saved_view';
+        let $ctrl = this;
+        let isFrontPage = true;
+        $ctrl.loadingMore = false;
         $ctrl.name = $stateParams.name;
         $ctrl.listing = [];
-        $ctrl.posts = [];
+        $ctrl.posts = []; //array of post listing 
         $ctrl.placeholders = [{}, {}, {}, {}, {}];
         $ctrl.about = null;
         $ctrl.rules = null;
         $ctrl.view = 'card';
+        $ctrl.sort = null;
+        $ctrl.sorts = [];
 
-        $ctrl.next = function () {
-            reddit.Api.getSubredditPosts($stateParams.name, { before: $ctrl.listing.after, count: $ctrl.posts.length })
-                .then(function (result) {
-                    $ctrl.listing = result.data.data;
-                    result.data.data.children.forEach(function (item) {
-                        $ctrl.posts.push(item);
-                    });
-                });
-        };
-
-        $ctrl.setView = function (type) {
-            $ctrl.view = type;
-            $window.localStorage.setItem(SAVED_VIEW, type);
-        };
 
         $ctrl.$onInit = function () {
-            //reset scroll
-            angular.element(window).scrollTop(0);
+            //set scroll handler to load more
+            iScroll.bind(loadMore); 
+
+            //reset title
+            $window.document.title = reddit.PAGE_TITLE;
+
+            //check if front page
+            isFrontPage = $stateParams.name !== null;
+
+            //scroll to top
+            scrollTop();
+
+            //set sorting
+            $ctrl.sorts = isFrontPage ? reddit.SORT_FRONTPAGE : reddit.SORT_SUBREDDIT;
+            $ctrl.sort = $ctrl.sorts[0];
 
             //download data
-            reddit.Api.getSubredditPosts($stateParams.name).then(function (result) {
-                $ctrl.listing = result.data.data;
-                $ctrl.posts = result.data.data.children;
-                $ctrl.placeholders = [];
-            });
+            loadPosts();
 
-            //only get side bar stuff if were not on front page
-            if ($stateParams.name !== null) {
+            //get side bar stuff if were not on front page
+            if (isFrontPage) {
 
                 reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
-
                     $ctrl.about = result.data.data;
-
-                    var html = document.getElementsByTagName('html')[0];
-                    html.style.setProperty("--subreddit-primary-color", $ctrl.about.primary_color);
-                    html.style.setProperty("--subreddit-key-color", $ctrl.about.key_color);
-
-                    $window.document.title = "Re: " + $ctrl.about.title;
+                    setSubredditStyles();
                 });
 
                 reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
@@ -723,12 +909,79 @@ const SubredditComponent = {
                 });
             }
 
-
             //Check storage for saved view
             var view = $window.localStorage.getItem(SAVED_VIEW);
             if (view !== null && view !== undefined)
                 $ctrl.view = view;
         };
+
+        $ctrl.$onDestroy = function () {
+            iScroll.unbind(loadMore);
+        };
+
+        $ctrl.setView = function (type) {
+            //changes view type
+            $ctrl.view = type;
+            $window.localStorage.setItem(SAVED_VIEW, type);
+        };
+
+        $ctrl.setSort = function (sort) {
+            $ctrl.sort = sort;
+
+            loadPosts();
+        };
+
+
+        function loadPosts() {
+            //reset posts
+            $ctrl.posts = [];
+            $ctrl.placeholders = [{}, {}, {}, {}, {}];
+            $ctrl.loadingMore = true;
+            reddit.Api.getSubredditPosts($stateParams.name, {}, $ctrl.sort).then(function (result) {
+                $ctrl.listing = result.data.data;
+                $ctrl.posts = result.data.data.children;
+
+                $ctrl.placeholders = [];
+                $ctrl.loadingMore = false;
+                scrollTop();
+            });
+        }
+
+        function loadMore() {
+            if ($ctrl.loadingMore) //escape if already loading
+                return;
+
+            $ctrl.loadingMore = true;
+
+            //pull next
+            reddit.Api.getSubredditPosts($stateParams.name, {
+                after: $ctrl.listing.after, count: $ctrl.posts.length
+            },
+                $ctrl.sort).then(function (result) {
+                    $ctrl.listing = result.data.data;
+                    result.data.data.children.forEach(function (item) {
+                        $ctrl.posts.push(item);
+                    });
+
+                    $ctrl.loadingMore = false;
+                });
+        }
+
+        function setSubredditStyles() {
+            //set color styles for subreddit
+            var html = document.getElementsByTagName('html')[0];
+            html.style.setProperty("--subreddit-primary-color", $ctrl.about.primary_color);
+            html.style.setProperty("--subreddit-key-color", $ctrl.about.key_color);
+
+            //set page title - Maybe need a title service?
+            $window.document.title = "Re: " + $ctrl.about.title;
+        }
+
+
+        function scrollTop() {
+            //scrolls window to the top
+            angular.element(window).scrollTop(0);
+        }
     }
 };
 (function () {
@@ -738,6 +991,7 @@ const SubredditComponent = {
     //Declare all angular components/services/factories/filters here
     app.service('api', ApiService);
     app.service('reddit', RedditService);
+    app.service('iScroll', InfiniteScrollService);
     app.component('appNavbar', NavbarComponent);
     app.component('appHome', HomeComponent);
     app.component('appSubreddit', SubredditComponent);
@@ -746,6 +1000,7 @@ const SubredditComponent = {
     app.component('appSubredditListview', SubredditListviewComponent);
     app.component('appSubredditComment', SubredditCommentComponent);
     app.component('appSubredditSidebar', SubredditSidebarComponent);
+    app.component('appProfile', ProfileComponent);
     app.component('appAuth', AuthComponent);
     app.component('postLike', PostLikeComponent);
     app.component('postMedia', PostMediaComponent);
@@ -799,7 +1054,13 @@ const SubredditComponent = {
                 url: "/auth",
                 component: 'appAuth'
             })
-
+            .state("profile", {
+                url: "/u/{name}",
+                component: 'appProfile',
+                params: {
+                    name: null
+                }
+            });
 
         //For api auth
         $httpProvider.interceptors.push(ApiInterceptor);

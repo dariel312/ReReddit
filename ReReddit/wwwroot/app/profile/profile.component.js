@@ -1,5 +1,5 @@
-﻿const SubredditComponent = {
-    templateUrl: "/app/subreddit/subreddit.component.html",
+﻿const ProfileComponent = {
+    templateUrl: "/app/profile/profile.component.html",
     controller: function ($stateParams, $window, iScroll, reddit) {
         const SAVED_VIEW = 'saved_view';
         let $ctrl = this;
@@ -14,11 +14,15 @@
         $ctrl.view = 'card';
         $ctrl.sort = null;
         $ctrl.sorts = [];
-
+        $ctrl.user = null;
 
         $ctrl.$onInit = function () {
+            reddit.Api.getUser($stateParams.name).then(function (response) {
+                $ctrl.user = response.data.data;
+            });
+
             //set scroll handler to load more
-            iScroll.bind(loadMore); 
+            iScroll.bind(loadMore);
 
             //reset title
             $window.document.title = reddit.PAGE_TITLE;
@@ -37,26 +41,30 @@
             loadPosts();
 
             //get side bar stuff if were not on front page
-            if (isFrontPage) {
+            //if (isFrontPage) {
 
-                reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
-                    $ctrl.about = result.data.data;
-                    setSubredditStyles();
-                });
+            //    reddit.Api.getSubredditAbout($stateParams.name).then(function (result) {
+            //        $ctrl.about = result.data.data;
+            //        setSubredditStyles();
+            //    });
 
-                reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
-                    $ctrl.rules = result.data.rules;
-                });
-            }
+            //    reddit.Api.getSubredditRules($stateParams.name).then(function (result) {
+            //        $ctrl.rules = result.data.rules;
+            //    });
+            //}
 
             //Check storage for saved view
             var view = $window.localStorage.getItem(SAVED_VIEW);
             if (view !== null && view !== undefined)
                 $ctrl.view = view;
+
+
+
+           
         };
 
         $ctrl.$onDestroy = function () {
-            iScroll.unbind(loadMore);
+            jWindow.unbind('scroll', onScroll);
         };
 
         $ctrl.setView = function (type) {
@@ -88,8 +96,7 @@
         }
 
         function loadMore() {
-            if ($ctrl.loadingMore) //escape if already loading
-                return;
+          
 
             $ctrl.loadingMore = true;
 

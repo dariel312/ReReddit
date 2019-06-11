@@ -12,7 +12,7 @@
                             <post-like ups="$ctrl.post.ups" name="$ctrl.post.name" />
 
                             <div class="flex-grow-1 col">
-                                <h5 class="modal-title">{{$ctrl.post.title}}</h5>
+                                <h5 class="modal-title">{{$ctrl.post.title | htmldecode }}</h5>
                                 <div class="text-muted mb-2">
                                     Posted by <a ng-href="http://www.reddit.com/u/{{$ctrl.post.author}}">{{$ctrl.post.author}}</a>
                                     <span am-time-ago="$ctrl.post.created_utc | amFromUnix"></span>
@@ -76,12 +76,10 @@
                                 <button class="btn btn-primary">Reply</button>
                             </div>
                         </div>
+
                         <!--Spinner-->
-                        <div class="row justify-content-center" ng-if="$ctrl.comments.length == 0">
-                            <div class="col col-sm-3 col-md-2">
-                                <img src="/img/icon_spinner.svg" class="mx-auto d-block img-fluid" />
-                            </div>
-                        </div>
+                        <div ng-include="'/app/subreddit/subreddit-spinner.template.html'" ng-if="$ctrl.comments.length == 0"></div>
+
                         <!--Comments-->
                         <div ng-repeat="c in $ctrl.comments" class="row">
                             <app-subreddit-comment comment="c" link="$ctrl.post" depth="0" class="mt-2"></app-subreddit-comment>

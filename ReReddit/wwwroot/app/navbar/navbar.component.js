@@ -1,6 +1,6 @@
 ﻿const NavbarComponent = {
     templateUrl: "/app/navbar/navbar.component.html",
-    controller: function ($rootScope, $state, $transitions, api) {
+    controller: function ($rootScope, $window, $state, $transitions, api) {
         var $ctrl = this;
         $ctrl.logged_in = api.isLoggedIn();
         $ctrl.subreddits = [];
@@ -41,6 +41,7 @@
 
         $ctrl.onLogout = function () {
             api.logOff();
+            $window.location.reload();
         };
 
         $ctrl.submit = function () {

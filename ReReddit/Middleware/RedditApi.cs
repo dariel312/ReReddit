@@ -36,8 +36,10 @@ namespace ReReddit.Middleware
 
             //get path
             var sourcePath = context.Request.Path.ToString();
-            var path = sourcePath.Remove(sourcePath.IndexOf("/api"), 4);
+            var query = context.Request.QueryString.ToString();
+            var path = sourcePath.Remove(sourcePath.IndexOf("/api"), 4) + query;
             var request = new HttpRequestMessage(method, REDDIT_API + path);
+
 
             //get auth token
             var auth = context.Request.Headers.FirstOrDefault(m => m.Key == "Authorization");

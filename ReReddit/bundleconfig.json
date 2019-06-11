@@ -7,6 +7,7 @@
       "wwwroot/app/common/*.js",
       "wwwroot/app/home/*.js",
       "wwwroot/app/navbar/*.js",
+      "wwwroot/app/profile/*.js",
       "wwwroot/app/subreddit/*.js",
       "wwwroot/app/app.module.js"
     ],
@@ -16,27 +17,28 @@
     }
   },
   {
-    "outputFileName": "wwwroot/js/angular-bundled.js",
+    "outputFileName": "wwwroot/js/vendor-bundled.js",
     "inputFiles": [
       "bower_components/jquery/dist/jquery.js",
+      "bower_components/bootstrap/assets/js/vendor/popper.min.js",
       "bower_components/bootstrap/dist/js/bootstrap.js",
+      "wwwroot/js/snuownd.js",
       "bower_components/moment/moment.js",
       "bower_components/angular/angular.js",
       "bower_components/angular-messages/angular-messages.js",
       "bower_components/angular-sanitize/angular-sanitize.js",
       "bower_components/angular-animate/angular-animate.js",
       "bower_components/angular-ui-router/release/angular-ui-router.js",
-      "bower_components/angular-moment/angular-moment.js",
-      "wwwroot/js/snuownd.js"
+      "bower_components/angular-moment/angular-moment.js"
     ],
     "minify": {
       "enabled": false
     }
   },
   {
-    "outputFileName": "wwwroot/js/angular-bundled.min.js",
+    "outputFileName": "wwwroot/js/vendor-bundled.min.js",
     "inputFiles": [
-      "wwwroot/js/angular-bundled.js"
+      "wwwroot/js/vendor-bundled.js"
     ],
     "minify": {
       "enabled": true

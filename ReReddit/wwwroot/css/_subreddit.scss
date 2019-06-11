@@ -159,8 +159,8 @@ app-subreddit-comment {
     flex-direction: row;
 
     .post-comment {
-        border-left: 0.25rem solid;
-        border-color: $color-primary;
+        border-left: 0.2rem solid;
+        border-color: rgba($color-primary, .2);
         padding-left: 0.5rem;
         margin: 0 0 0rem 0px;
         color: #111111;
@@ -169,14 +169,10 @@ app-subreddit-comment {
 
         p {
             margin-bottom: 0.2rem;
-            /*word-wrap: break-word;
-            overflow-wrap: break-word;*/
         }
 
         a, span {
-            /*word-wrap: break-word;
-            overflow-wrap: break-word;
-            word-break: break-all;*/
+
         }
 
         .post-like {
@@ -215,9 +211,9 @@ app-subreddit-comment {
         padding: 0 0.5rem;
     }
 
-    .comment-actions{
-        a{
-            font-size: 0.9rem;  
+    .comment-actions {
+        a {
+            font-size: 0.9rem;
             font-family: $font-condensed;
             margin: 0 0.25rem;
         }

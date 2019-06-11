@@ -1,7 +1,7 @@
 /*
-    Service that will be a wrapper for all api calls
+ *  Service that will be a wrapper for all api calls
 */
-const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $state, $q, $timeout) {
+const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $sce, $state, $q, $timeout) {
     const self = this;
     const host = "https://www.reddit.com";
     let client_id = "t1woxVATacs9Wg";
@@ -11,6 +11,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
     const token_key = "auth_token";
     var auth_info = null;
     var identity = null;
+    
 
     if (ENVIRONMENT == "PROD") {
         client_id = "TDmT_7LQ_5LkmQ";
@@ -27,9 +28,16 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
             parameters = {};
 
         return $http.get(url, { params: parameters });
-        // .finally(finFunc)
-        // .catch(errorFunc);
     };
+
+    function _getP(url, parameters) {
+        if (parameters === null || parameters === undefined)
+            parameters = {};
+
+        parameters.jsonpCallbackParam = 'callback';
+
+        return $http.jsonp(url, parameters);
+    }
 
     function _post(url, data) {
         if (data === null || data === undefined)
@@ -54,19 +62,21 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         return _get(host + "/r/" + subreddit + "/comments/" + id + ".json");
     };
 
-    this.getSubredditPosts = function (subreddit, params) {
-
+    this.getSubredditPosts = function (subreddit, params, sort) {
+        if (sort === undefined || sort === null) {
+            sort = 'hot'; //default for subreddit
+        }
         if (this.isLoggedIn()) {
-            if (subreddit == null)
-                return _get("api/hot", params);
+            if (subreddit === null)
+                return _get("api/" + sort, params);
             else
-                return _get("api/r/" + subreddit, params);
+                return _get("api/r/" + subreddit + "/" + sort, params);
         }
         else {
-            if (subreddit == null)
-                return _get(host + "/.json", params);
+            if (subreddit === null)
+                return _get(host + "/" + sort + "/.json", params);
             else
-                return _get(host + "/r/" + subreddit + ".json", params);
+                return _get(host + "/r/" + subreddit + "/" + sort + ".json", params);
         }
     };
 
@@ -90,7 +100,7 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
         else {
             return _get(host + "/r/" + subreddit + "/about/rules.json");
         }
-    }
+    };
 
     this.getSubreddits = function () {
         if (this.isLoggedIn()) {
@@ -126,6 +136,15 @@ const ApiService = function ($http, $window, $rootScope, $httpParamSerializer, $
             });
         }
     };
+
+    //users
+    this.getUser = function (name) {
+        //JSONP req requires this
+        var urlPath = host + "/u/" + name + "/about.json?jsonp=callback";
+        var tUrl = $sce.trustAsResourceUrl(urlPath);
+
+        return _getP(tUrl);
+    }
 
     //Auth
     this.redirectAuthUrl = function () {
